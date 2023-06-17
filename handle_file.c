@@ -46,7 +46,7 @@ int	save_path_to_struct(char *str, int id, t_data *data)
  * Id 0 is for floor RGB code
  * Id 1 is for ceiling RGB code
  */
-int save_rgb_to_struct(char *str, int id, t_data *data)
+int	save_rgb_to_struct(char *str, int id, t_data *data)
 {
 	char	**info;
 	char	**rgb;
@@ -67,15 +67,15 @@ int save_rgb_to_struct(char *str, int id, t_data *data)
 	return (1);
 }
 
-int run_compares(char *str, t_data *data)
+int	run_compares(char *str, t_data *data)
 {
-	if (!ft_strncmp(str, "NO", 2) && save_path_to_struct(str,0, data))
+	if (!ft_strncmp(str, "NO", 2) && save_path_to_struct(str, 0, data))
 		return (1);
-	else if (!ft_strncmp(str, "SO", 2) && save_path_to_struct(str,1, data))
+	else if (!ft_strncmp(str, "SO", 2) && save_path_to_struct(str, 1, data))
 		return (1);
-	else if (!ft_strncmp(str, "WE", 2) && save_path_to_struct(str,2, data))
+	else if (!ft_strncmp(str, "WE", 2) && save_path_to_struct(str, 2, data))
 		return (1);
-	else if (!ft_strncmp(str, "EA", 2) && save_path_to_struct(str,3, data))
+	else if (!ft_strncmp(str, "EA", 2) && save_path_to_struct(str, 3, data))
 		return (1);
 	else if (!ft_strncmp(str, "F", 1) && save_rgb_to_struct(str, 0, data))
 		return (1);
@@ -84,12 +84,12 @@ int run_compares(char *str, t_data *data)
 	return (0);
 }
 
-int is_empty_line(char *str)
+int	is_empty_line(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
 		if (ft_isprint(str[i]))
 			return (0);
@@ -98,9 +98,10 @@ int is_empty_line(char *str)
 	return (1);
 }
 
-int check_struct(t_data *data)
+int	check_struct(t_data *data)
 {
-	if (data->file_cont->textures[0] && data->file_cont->textures[1] && data->file_cont->textures[2])
+	if (data->file_cont->textures[0] && data->file_cont->textures[1] && \
+	data->file_cont->textures[2])
 	{
 		if (data->file_cont->colors[0] && data->file_cont->colors[1])
 			return (1);
@@ -111,14 +112,15 @@ int check_struct(t_data *data)
 int	find_identifiers(char **str, t_data *data)
 {
 	int	i;
-	int beg_map;
-	int end_map;
+	int	beg_map;
+	int	end_map;
 
 	i = 0;
 	beg_map = -1;
 	while (str[i])
 	{
-		if (!run_compares(str[i], data) && !is_empty_line(str[i]) && beg_map == -1 && check_struct(data))
+		if (!run_compares(str[i], data) && !is_empty_line(str[i]) && \
+		beg_map == -1 && check_struct(data))
 			beg_map = i;
 		i++;
 	}

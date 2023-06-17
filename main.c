@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia@student.42porto.pt>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:27:42 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/06/14 22:27:42 by tabreia-         ###   ########.fr       */
+/*   Updated: 2023/06/17 18:40:39 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,14 @@ t_data	*generate_data(void)
 
 int	main(int ac, char **av)
 {
-	t_data *data;
+	t_data	*data;
 
-	if (ac != 2)
+	if (ac != 2 || !check_if_file_exists(av[1]))
 		return (1);
-	if(!check_if_file_exists(av[1]))
-	{
-		printf("File doesn't exist\n");
-		return (0);
-	}
 	data = generate_data();
 	if (validate_cub_file(av[1], data))
 	{
-		printf("Invalid .cub file \n");
+		write(2, "Error: Invalid .cub file\n", 25);
 		return (1);
 	}
 	start_game(data);

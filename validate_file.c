@@ -6,18 +6,11 @@
 /*   By: tabreia- <tabreia@student.42porto.pt>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:23:44 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/06/14 22:23:44 by tabreia-         ###   ########.fr       */
+/*   Updated: 2023/06/17 18:53:44 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-int 	is_valid_map_char(char c)
-{
-	if (c == '0' || c == '1' || c == 'N' || c == 'S' || c == 'W' || c == 'E' || c == '\t' || c == 32)
-		return (1);
-	return (0);
-}
 
 void	get_max_yx(char **map, t_data *data)
 {
@@ -61,8 +54,8 @@ void	get_max_yx(char **map, t_data *data)
 
 void	get_start_point(char **map, t_data *data)
 {
-	int 	x;
-	int 	y;
+	int	x;
+	int	y;
 
 	y = 0;
 	while (y <= data->max.y)
@@ -113,22 +106,18 @@ void	check_perimeter(char **map,int y, int x, t_data *data)
 int	validate_map(char **arr, t_data *data)
 {
 	get_max_yx(arr, data);
-	/*get_top_fp(arr, data);
-	get_mid_fp(arr, data);
-	get_bot_fp(arr, data);*/
 	get_start_point(arr, data);
-	check_perimeter(arr, data->flood_point.y, data->flood_point.x + 1,data);
+	check_perimeter(arr, data->flood_point.y, data->flood_point.x + 1, data);
 	if (data->map_sur == 1)
 		return (0);
 	else
 		return (1);
-
 }
 
 int	validate_cub_file(char *file_path, t_data *data)
 {
 	char	**map_val;
-	int 	err;
+	int		err;
 
 	read_file(file_path, data);
 	map_val = check_for_data(data->file_cont->txt, data);
@@ -138,12 +127,20 @@ int	validate_cub_file(char *file_path, t_data *data)
 
 int	check_if_file_exists(char *file_path)
 {
-	int	fd;
+	int		fd;
+	char	*file_ext;
 
 	fd = open(file_path, O_RDONLY);
-	if (fd < 0)
+	if (fd == -1)
 	{
-		close(fd);
+		perror("Error");
+		return (0);
+	}
+	close(fd);
+	file_ext = ft_strchr(file_path, '.');
+	if (file_ext && ft_strncmp(file_ext, ".cub", ft_strlen(file_ext) + 1))
+	{
+		write(2, "Error: File extension is not a valid extension\n", 47);
 		return (0);
 	}
 	return (1);

@@ -40,10 +40,10 @@ int	is_player_char(char c, t_data *data)
 void	get_init_player_pos(char **map, t_data *data)
 {
 	int	y;
-	int x;
+	int	x;
 
 	y = 0;
-	while(map[y])
+	while (map[y])
 	{
 		x = 0;
 		while (map[y][x])
@@ -66,7 +66,7 @@ void	start_game(t_data *data)
 	data->mlx_ptr = mlx_init();
 	data->window.x = 640;
 	data->window.y = 640;
-	data->win_ptr = mlx_new_window(data->mlx_ptr, data->window.x, data->window
+	data->win_ptr = mlx_new_window(data->mlx_ptr, data->window.x, data->window \
 	.y, "cub3d");
 	mlx_loop(data->mlx_ptr);
 }
