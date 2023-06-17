@@ -3,7 +3,7 @@ CFLAGS = -Wall -Wextra -Werror -g
 MLXFLAGS = -L ./minilibx-linux -lm -lmlx -Ilmlx -lXext -lX11
 DEPS = minilibx-linux/libmlx.a libft/libft.a
 NAME = cub3d
-SRC = handle_file.c inits.c main.c validate_file.c
+SRC = handle_file.c inits.c main.c validate_file.c game.c
 OBJ = $(SRC:.c=.o)
 LIBFT = libft/libft.a
 

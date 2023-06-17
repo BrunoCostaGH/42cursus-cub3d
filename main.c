@@ -78,6 +78,11 @@ int	main(int ac, char **av)
 		return (0);
 	}
 	data = generate_data();
-	validate_cub_file(av[1], data);
+	if (validate_cub_file(av[1], data))
+	{
+		printf("Invalid .cub file \n");
+		return (1);
+	}
+	start_game(data);
 	print_struct(data);
 }

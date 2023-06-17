@@ -110,7 +110,7 @@ void	check_perimeter(char **map,int y, int x, t_data *data)
 }
 
 
-void	validate_map(char **arr, t_data *data)
+int	validate_map(char **arr, t_data *data)
 {
 	get_max_yx(arr, data);
 	/*get_top_fp(arr, data);
@@ -119,21 +119,21 @@ void	validate_map(char **arr, t_data *data)
 	get_start_point(arr, data);
 	check_perimeter(arr, data->flood_point.y, data->flood_point.x + 1,data);
 	if (data->map_sur == 1)
-	{
-		printf("Valid map\n");
-	}
+		return (0);
 	else
-		printf("Invalid map\n");
+		return (1);
 
 }
 
-void	validate_cub_file(char *file_path, t_data *data)
+int	validate_cub_file(char *file_path, t_data *data)
 {
 	char	**map_val;
+	int 	err;
 
 	read_file(file_path, data);
 	map_val = check_for_data(data->file_cont->txt, data);
-	validate_map(map_val, data);
+	err = validate_map(map_val, data);
+	return (err);
 }
 
 int	check_if_file_exists(char *file_path)

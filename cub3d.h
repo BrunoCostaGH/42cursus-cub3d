@@ -53,6 +53,13 @@ typedef struct s_file
 	char 		**map_arr;
 }	t_file;
 
+typedef struct s_player
+{
+	t_point		init_pos;
+	char 		init_dir;
+}	t_player;
+
+
 typedef struct s_data
 {
 	void		*mlx_ptr;
@@ -60,17 +67,20 @@ typedef struct s_data
 	int 		map_sur;
 	t_point 	flood_point;
 	t_point		max;
+	t_point 	window;
+	t_player	player;
 	t_file 		*file_cont;
 	t_img		img;
 	t_map		map;
 }	t_data;
 
 int		check_if_file_exists(char *file_path);
+int		validate_cub_file(char *file_path, t_data *data);
 
 char	**check_for_data(char **str, t_data *data);
-void	validate_cub_file(char *file_path, t_data *data);
-void	read_file(char *file_path, t_data *data);
-
 char	**get_map(int beg_map, char **txt);
+
+void	read_file(char *file_path, t_data *data);
+void	start_game(t_data *data);
 
 #endif
