@@ -47,6 +47,7 @@ cub3d
 *.mod*
 *.cmd
 .tmp_versions/
+.minilibx-linux/
 modules.order
 Module.symvers
 Mkfile.old
