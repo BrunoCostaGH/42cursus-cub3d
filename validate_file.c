@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia@student.42porto.pt>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:23:44 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/06/17 18:53:44 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/06/17 20:02:18 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,13 +119,14 @@ int	validate_cub_file(char *file_path, t_data *data)
 	char	**map_val;
 	int		err;
 
-	read_file(file_path, data);
+	if (read_file(file_path, data) == 0)
+		return (1);
 	map_val = check_for_data(data->file_cont->txt, data);
 	err = validate_map(map_val, data);
 	return (err);
 }
 
-int	check_if_file_exists(char *file_path)
+int check_if_file_exists(char *file_path, int is_cub_file)
 {
 	int		fd;
 	char	*file_ext;
@@ -137,11 +138,16 @@ int	check_if_file_exists(char *file_path)
 		return (0);
 	}
 	close(fd);
-	file_ext = ft_strchr(file_path, '.');
-	if (file_ext && ft_strncmp(file_ext, ".cub", ft_strlen(file_ext) + 1))
+	if (is_cub_file)
 	{
-		write(2, "Error: File extension is not a valid extension\n", 47);
-		return (0);
+		file_ext = ft_strchr(file_path, '.');
+		if (!file_ext || ft_strncmp(file_ext, ".cub", ft_strlen(file_ext) + 1))
+		{
+			write(2, "Error: ", 7);
+			write(2, file_ext, ft_strlen(file_ext));
+			write(2, " is not a valid extension\n", 26);
+			return (0);
+		}
 	}
 	return (1);
 }

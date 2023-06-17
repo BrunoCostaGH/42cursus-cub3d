@@ -74,13 +74,13 @@ typedef struct s_data
 	t_map		map;
 }	t_data;
 
-int		check_if_file_exists(char *file_path);
+int check_if_file_exists(char *file_path, int is_cub_file);
 int		validate_cub_file(char *file_path, t_data *data);
 
 char	**check_for_data(char **str, t_data *data);
 char	**get_map(int beg_map, char **txt);
 
-void	read_file(char *file_path, t_data *data);
+int read_file(char *file_path, t_data *data);
 void	start_game(t_data *data);
 
 #endif

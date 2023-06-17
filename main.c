@@ -70,7 +70,7 @@ int	main(int ac, char **av)
 {
 	t_data	*data;
 
-	if (ac != 2 || !check_if_file_exists(av[1]))
+	if (ac != 2 || !check_if_file_exists(av[1], 1))
 		return (1);
 	data = generate_data();
 	if (validate_cub_file(av[1], data))
