@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia@student.42porto.pt>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:23:44 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/07/01 15:53:28 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/07/01 19:53:08 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,6 @@ void	get_max_yx(char **map, t_data *data)
 	data->max.y = y_ret;
 }
 
-/*void	flood_fill(char **map_val, int y, int x)
-{
-	if (map_val[y][x] == 'F' || (map_val[y][x] != '0' && map_val[y][x] != 'C'\
-		&& map_val[y][x] != 'E' && map_val[y][x] != 'P'))
-		return ;
-	map_val[y][x] = 'F';
-	flood_fill(map_val, y - 1, x);
-	flood_fill(map_val, y + 1, x);
-	flood_fill(map_val, y, x - 1);
-	flood_fill(map_val, y, x + 1);
-}*/
-
 void	get_start_point(char **map, t_data *data)
 {
 	int	x;
@@ -75,56 +63,85 @@ void	get_start_point(char **map, t_data *data)
 	}
 }
 
-void	check_perimeter(char **map,int y, int x, t_data *data)
+bool	is_valid_char(char c)
 {
-	if (y < 0 || y > data->max.y || x < 0 || x > ft_strlen(map[y]))
-		return ;
-	if (map[y][x] == 'F' || (map[y][x] != '1'))
-		return ;
-	if (y == data->flood_point.y && x == data->flood_point.x)
-		data->map_sur = 1;
-	map[y][x] = 'F';
-	if (y <= data->max.y / 2)
-	{
-		check_perimeter(map, y, x + 1, data);
-		check_perimeter(map, y + 1, x, data);
-		check_perimeter(map, y - 1, x, data);
-		if (y != 0)
-			check_perimeter(map, y, x - 1, data);
-	}
-	else
-	{
-		check_perimeter(map, y, x - 1, data);
-		check_perimeter(map, y - 1, x, data);
-		check_perimeter(map, y + 1, x, data);
-		check_perimeter(map, y, x + 1, data);
-	}
-}
-
-
-bool valid_map(char **arr, t_data *data)
-{
-	get_max_yx(arr, data);
-	get_start_point(arr, data);
-	check_perimeter(arr, data->flood_point.y, data->flood_point.x + 1, data);
-	if (data->map_sur == 1)
+	if (!c)
+		return (false);
+	if (c == '0' || c == '1' || c == 'N' || c == 'S' || c == 'W' || c == 'E')
 		return (true);
 	return (false);
 }
 
-bool valid_cub_file(char *file_path, t_data *data)
+bool	check_valid_surrounding(char **map, const char *tile, int y)
+{
+	int	x;
+
+	x = 0;
+	while (map[y][x] != *tile)
+		x++;
+	if (!map[y][x] || x == 0 || y == 0)
+		return (false);
+	if (is_valid_char(map[y - 1][x - 1]) == false)
+		return (false);
+	if (is_valid_char(map[y - 1][x]) == false)
+		return (false);
+	if (is_valid_char(map[y - 1][x + 1]) == false)
+		return (false);
+	if (is_valid_char(map[y][x - 1]) == false)
+		return (false);
+	if (is_valid_char(map[y][x + 1]) == false)
+		return (false);
+	if (is_valid_char(map[y + 1][x - 1]) == false)
+		return (false);
+	if (is_valid_char(map[y + 1][x]) == false)
+		return (false);
+	if (is_valid_char(map[y + 1][x + 1]) == false)
+		return (false);
+	return (true);
+}
+
+bool	valid_map(char **map)
+{
+	int		i;
+	char	*current_floor;
+
+	i = 0;
+	current_floor = ft_strchr(map[i], '0');
+	while (map[i])
+	{
+		if (current_floor)
+		{
+			if (check_valid_surrounding(map, current_floor, i) == false)
+				return (false);
+		}
+		else
+		{
+			if (map[i + 1])
+			{
+				current_floor = ft_strchr(map[++i], '0');
+				continue ;
+			}
+			break ;
+		}
+		current_floor = ft_strchr(current_floor + 1, '0');
+	}
+	return (true);
+}
+
+bool	valid_cub_file(char *file_path, t_data *data)
 {
 	char	**map_val;
 
 	if (read_file(file_path, data) == 0)
 		return (false);
 	map_val = check_for_data(data->file_cont->txt, data);
-	if (valid_map(map_val, data))
+	if (valid_map(map_val))
 		return (true);
+	write(2, "Error: Invalid map\n", 19);
 	return (false);
 }
 
-bool check_if_file_exists(char *file_path, int is_cub_file)
+bool	check_if_file_exists(char *file_path, int is_cub_file)
 {
 	int		fd;
 	char	*file_ext;

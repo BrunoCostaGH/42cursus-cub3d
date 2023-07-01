@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia@student.42porto.pt>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:27:42 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/07/01 15:54:11 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/07/01 16:17:57 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ int	main(int ac, char **av)
 {
 	t_data	*data;
 
+	if (ac != 2)
+		write(2, "Usage: ./cub3d <path_to_cub_file>\n", 34);
 	if (ac != 2 || !check_if_file_exists(av[1], 1))
 		return (1);
 	data = generate_data();
