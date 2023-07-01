@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia@student.42porto.pt>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:27:42 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/06/17 18:40:39 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/07/01 15:54:11 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,23 @@
 
 void	print_struct(t_data *data)
 {
-	int i = 0;
-	int k = 0;
+	int	i;
+	int	k;
 
+	i = 0;
 	while (data->file_cont->textures[i])
-	{
-		printf("%s\n", data->file_cont->textures[i]);
-		i++;
-	}
+		printf("%s\n", data->file_cont->textures[i++]);
 	i = 0;
 	while (data->file_cont->colors[i])
 	{
 		k = 0;
 		while (data->file_cont->colors[i][k])
-		{
-			printf("%i\n", data->file_cont->colors[i][k]);
-			k++;
-		}
+			printf("%i\n", data->file_cont->colors[i][k++]);
 		i++;
 	}
 	i = 0;
-	k = 0;
 	while (data->file_cont->map_arr[i])
-	{
-		printf("%s", data->file_cont->map_arr[i]);
-		i++;
-	}
+		printf("%s", data->file_cont->map_arr[i++]);
 	/*i = 0;
 	while (i <= 5)
 	{
@@ -73,7 +64,7 @@ int	main(int ac, char **av)
 	if (ac != 2 || !check_if_file_exists(av[1], 1))
 		return (1);
 	data = generate_data();
-	if (validate_cub_file(av[1], data))
+	if (!valid_cub_file(av[1], data))
 	{
 		write(2, "Error: Invalid .cub file\n", 25);
 		return (1);

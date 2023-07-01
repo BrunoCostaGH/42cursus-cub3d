@@ -12,29 +12,29 @@
 
 #include "cub3d.h"
 
-int	is_player_char(char c, t_data *data)
+bool	is_player_char(char c, t_data *data)
 {
 	if (c == 'N')
 	{
 		data->player.init_dir = 'N';
-		return (1);
+		return (true);
 	}
 	if (c == 'S')
 	{
 		data->player.init_dir = 'S';
-		return (1);
+		return (true);
 	}
 	if (c == 'E')
 	{
 		data->player.init_dir = 'E';
-		return (1);
+		return (true);
 	}
 	if (c == 'W')
 	{
 		data->player.init_dir = 'W';
-		return (1);
+		return (true);
 	}
-	return (0);
+	return (false);
 }
 
 void	get_init_player_pos(char **map, t_data *data)

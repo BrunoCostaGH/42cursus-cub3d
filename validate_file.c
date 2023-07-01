@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia@student.42porto.pt>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:23:44 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/06/17 20:02:18 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/07/01 15:53:28 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,34 +99,32 @@ void	check_perimeter(char **map,int y, int x, t_data *data)
 		check_perimeter(map, y + 1, x, data);
 		check_perimeter(map, y, x + 1, data);
 	}
-	return ;
 }
 
 
-int	validate_map(char **arr, t_data *data)
+bool valid_map(char **arr, t_data *data)
 {
 	get_max_yx(arr, data);
 	get_start_point(arr, data);
 	check_perimeter(arr, data->flood_point.y, data->flood_point.x + 1, data);
 	if (data->map_sur == 1)
-		return (0);
-	else
-		return (1);
+		return (true);
+	return (false);
 }
 
-int	validate_cub_file(char *file_path, t_data *data)
+bool valid_cub_file(char *file_path, t_data *data)
 {
 	char	**map_val;
-	int		err;
 
 	if (read_file(file_path, data) == 0)
-		return (1);
+		return (false);
 	map_val = check_for_data(data->file_cont->txt, data);
-	err = validate_map(map_val, data);
-	return (err);
+	if (valid_map(map_val, data))
+		return (true);
+	return (false);
 }
 
-int check_if_file_exists(char *file_path, int is_cub_file)
+bool check_if_file_exists(char *file_path, int is_cub_file)
 {
 	int		fd;
 	char	*file_ext;
@@ -135,7 +133,7 @@ int check_if_file_exists(char *file_path, int is_cub_file)
 	if (fd == -1)
 	{
 		perror("Error");
-		return (0);
+		return (false);
 	}
 	close(fd);
 	if (is_cub_file)
@@ -146,8 +144,8 @@ int check_if_file_exists(char *file_path, int is_cub_file)
 			write(2, "Error: ", 7);
 			write(2, file_ext, ft_strlen(file_ext));
 			write(2, " is not a valid extension\n", 26);
-			return (0);
+			return (false);
 		}
 	}
-	return (1);
+	return (true);
 }

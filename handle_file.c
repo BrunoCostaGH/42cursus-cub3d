@@ -100,29 +100,24 @@ int	run_compares(char *str, t_data *data)
 	return (0);
 }
 
-int	is_empty_line(char *str)
+bool	is_empty_line(char *str)
 {
 	int	i;
 
 	i = 0;
 	while (str[i])
-	{
-		if (ft_isprint(str[i]))
-			return (0);
-		i++;
-	}
-	return (1);
+		if (ft_isprint(str[i++]))
+			return (false);
+	return (true);
 }
 
-int	check_struct(t_data *data)
+bool	is_valid_struct(t_data *data)
 {
 	if (data->file_cont->textures[0] && data->file_cont->textures[1] && \
 	data->file_cont->textures[2])
-	{
 		if (data->file_cont->colors[0] && data->file_cont->colors[1])
-			return (1);
-	}
-	return (0);
+			return (true);
+	return (false);
 }
 
 int	find_identifiers(char **str, t_data *data)
@@ -136,7 +131,7 @@ int	find_identifiers(char **str, t_data *data)
 	while (str[i])
 	{
 		if (!run_compares(str[i], data) && !is_empty_line(str[i]) && \
-		beg_map == -1 && check_struct(data))
+		beg_map == -1 && is_valid_struct(data))
 			beg_map = i;
 		i++;
 	}
@@ -156,11 +151,7 @@ char	**get_map(int beg_map, char **txt)
 	map = malloc(sizeof(char *) * (i - beg_map));
 	i = 0;
 	while (txt[beg_map])
-	{
-		map[i] = txt[beg_map];
-		i++;
-		beg_map++;
-	}
+		map[i++] = txt[beg_map++];
 	return (map);
 }
 
