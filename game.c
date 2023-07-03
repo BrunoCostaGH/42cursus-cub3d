@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:56:23 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/06/17 17:56:23 by tabreia-         ###   ########.fr       */
+/*   Updated: 2023/07/03 14:34:45 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	get_init_player_pos(char **map, t_data *data)
 
 void	start_game(t_data *data)
 {
-	get_init_player_pos(data->file_cont->map_arr, data);
+	//get_init_player_pos(data->file_cont->map_arr, data);
 	data->mlx_ptr = mlx_init();
 	data->window.x = 640;
 	data->window.y = 640;
