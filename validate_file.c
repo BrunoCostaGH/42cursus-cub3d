@@ -3,81 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   validate_file.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tabreia- <tabreia@student.42porto.pt>      +#+  +:+       +#+        */
+/*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:23:44 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/07/03 15:07:41 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/07/06 15:07:56 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-bool	is_valid_char(t_data *data, char c, int y, int x)
-{
-	if (c && (c == '0' || c == '1'))
-		return (true);
-	if (c && (c == 'N' || c == 'S' || c == 'W' || c == 'E'))
-	{
-		if (!data->player.init_dir && !data->player.init_pos.x && \
-		!data->player.init_pos.y)
-		{
-			data->player.init_pos.x = x;
-			data->player.init_pos.y = y;
-			data->player.init_dir = c;
-		}
-		else if (data->player.init_dir != c || data->player.init_pos.x != x || \
-		data->player.init_pos.y != y)
-		{
-			write(2, "Error: Detected multiple player spawn points\n", 45);
-			return (false);
-		}
-		return (true);
-	}
-	write(2, "Error: Map not surrounded by walls\n", 35);
-	return (false);
-}
-
-bool	check_valid_surrounding(t_data *data, char **map, char *point, int y)
+bool	check_valid_surrounding(char **map, char *point, int y)
 {
 	int	x;
 
 	x = 0;
 	while (&(map[y][x]) != point)
 		x++;
-	if (!map[y][x] || x == 0 || y == 0)
+	if (!map[y] || !map[y][x] || x == 0 || y == 0)
 	{
 		write(2, "Error: Map not surrounded by walls\n", 35);
 		return (false);
 	}
-	return (is_valid_char(data, map[y - 1][x - 1], y - 1, x - 1) && \
-			is_valid_char(data, map[y - 1][x], y - 1, x) && \
-			is_valid_char(data, map[y - 1][x + 1], y - 1, x + 1) && \
-			is_valid_char(data, map[y][x - 1], y, x - 1) && \
-			is_valid_char(data, map[y][x + 1], y, x + 1) && \
-			is_valid_char(data, map[y + 1][x - 1], y + 1, x - 1) && \
-			is_valid_char(data, map[y + 1][x], y + 1, x) && \
-			is_valid_char(data, map[y + 1][x + 1], y + 1, x + 1));
+	return (is_valid_char(map[y - 1][x - 1], false) && \
+			is_valid_char(map[y - 1][x], false) && \
+			is_valid_char(map[y - 1][x + 1], false) && \
+			is_valid_char(map[y][x - 1], false) && \
+			is_valid_char(map[y][x + 1], false) && \
+			is_valid_char(map[y + 1][x - 1], false) && \
+			is_valid_char(map[y + 1][x], false) && \
+			is_valid_char(map[y + 1][x + 1], false));
 }
 
-bool	valid_map(t_data *data, char **map)
+bool	valid_map(char **map)
 {
-	int		i;
+	int		y;
 	char	*current_floor;
 
-	i = 0;
-	current_floor = ft_strchr(map[i], '0');
-	while (map[i])
+	y = 0;
+	current_floor = ft_strchr(map[y], '0');
+	while (map[y])
 	{
 		if (current_floor)
 		{
-			if (check_valid_surrounding(data, map, current_floor, i) == false)
+			if (check_valid_surrounding(map, current_floor, y) == false)
 				return (false);
 		}
 		else
 		{
-			if (map[i + 1])
+			if (map[y + 1])
 			{
-				current_floor = ft_strchr(map[++i], '0');
+				current_floor = ft_strchr(map[++y], '0');
 				continue ;
 			}
 			break ;
@@ -87,21 +62,28 @@ bool	valid_map(t_data *data, char **map)
 	return (true);
 }
 
+bool	valid_player(t_data *data, char **map)
+{
+	if (get_init_player_pos(data, map, 0))
+		return (false);
+	if (data->player.init_pos.x && data->player.init_pos.y && \
+		data->player.init_dir && check_valid_surrounding(map, \
+		&map[data->player.init_pos.y][data->player.init_pos.x], \
+		data->player.init_pos.y))
+		return (true);
+	write(2, "Error: Missing or invalid player spawn point\n", 45);
+	return (false);
+}
+
 bool	valid_cub_file(char *file_path, t_data *data)
 {
-	char	**map_val;
+	char	**map;
 
 	if (read_file(file_path, data) == 0)
 		return (false);
-	map_val = check_for_data(data->file_cont->txt, data);
-	if (valid_map(data, map_val) == false)
+	map = check_for_data(data->file_cont->txt, data);
+	if (valid_map(map) == false || valid_player(data, map) == false)
 		return (false);
-	if (!data->player.init_pos.x || !data->player.init_pos.y || \
-	!data->player.init_dir)
-	{
-		write(2, "Error: Missing or invalid player spawn point\n", 45);
-		return (false);
-	}
 	return (true);
 }
 

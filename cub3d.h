@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tabreia- <tabreia@student.42porto.pt>      +#+  +:+       +#+        */
+/*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:14:41 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/07/01 15:44:14 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/07/06 15:07:29 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,9 @@ typedef struct s_data
 
 bool	check_if_file_exists(char *file_path, int is_cub_file);
 bool	valid_cub_file(char *file_path, t_data *data);
+bool	is_valid_char(char c, bool for_player);
 
+int		get_init_player_pos(t_data *data, char **map, int y);
 int		read_file(char *file_path, t_data *data);
 
 char	**check_for_data(char **str, t_data *data);

@@ -1,9 +1,21 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/06/14 22:20:44 by tabreia-          #+#    #+#              #
+#    Updated: 2023/07/06 15:06:09 by bsilva-c         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
 MLXFLAGS = -L ./minilibx-linux -lm -lmlx -Ilmlx -lXext -lX11
 DEPS = minilibx-linux/libmlx.a libft/libft.a
 NAME = cub3d
-SRC = handle_file.c inits.c main.c validate_file.c game.c
+SRC = handle_file.c inits.c main.c validate_file.c validate_file_utils.c game.c
 OBJ = $(SRC:.c=.o)
 LIBFT = libft/libft.a
 
