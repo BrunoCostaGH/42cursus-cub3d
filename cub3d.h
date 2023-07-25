@@ -26,38 +26,47 @@
 # include <fcntl.h>
 # include <stdbool.h>
 
+typedef struct t_vector
+{
+	double		x;
+	double		y;
+}	t_vector;
 typedef struct s_point
 {
-	int	x;
-	int	y;
+	int			x;
+	int			y;
 }	t_point;
 
 typedef struct s_map
 {
-	int		player;
-	char	**map_arr;
-	char	**map_val;
-	t_point	map_size;
+	int			player;
+	char		**map_arr;
+	char		**map_val;
+	t_point		map_size;
 }	t_map;
 
 typedef struct s_img
 {
-	void	*mlx_img;
-	char	*addr;
+	void		*mlx_img;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
 }	t_img;
 
 typedef struct s_file
 {
-	char	**txt;
-	char	**textures;
-	int		**colors;
-	char	**map_arr;
+	char		**txt;
+	char		**textures;
+	int			**colors;
+	char		**map_arr;
 }	t_file;
 
 typedef struct s_player
 {
-	t_point	init_pos;
-	char	init_dir;
+	t_point		init_pos;
+	t_vector	init_dir_vec;
+	char		init_dir;
 }	t_player;
 
 
@@ -68,10 +77,10 @@ typedef struct s_data
 	int			map_sur;
 	t_point		flood_point;
 	t_point		max;
-	t_point		window;
+	t_vector 	window;
 	t_player	player;
 	t_file		*file_cont;
-	t_img		img;
+	t_img		*img;
 	t_map		map;
 }	t_data;
 

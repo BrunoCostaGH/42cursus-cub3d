@@ -50,8 +50,9 @@ t_data	*generate_data(void)
 	data->mlx_ptr = 0;
 	data->win_ptr = 0;
 	data->map_sur = 0;
-	data->img.mlx_img = 0;
 	data->file_cont = malloc(sizeof(t_file));
+	data->img = malloc((sizeof(t_img)));
+	data->img->mlx_img = 0;
 	data->file_cont->textures = malloc(sizeof(char *) * 4);
 	data->file_cont->colors = malloc(sizeof(int *) * 3);
 	return (data);
