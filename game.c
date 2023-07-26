@@ -21,7 +21,7 @@ void	pix(t_img *img, int x, int y, int color)
 {
 	char		*dst;
 
-	dst = img->addr + (y * img->line_length+ x * (img->bits_per_pixel / 8));
+	dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
 }
 
@@ -30,7 +30,7 @@ void	draw_vert_line(t_data *data, int x, int draw_start, int draw_end, int color
 	int	i;
 
 	i = draw_start;
-	while(i <= draw_end)
+	while(i <= draw_end && i < data->window.y && x < data->window.x)
 	{
 		pix(data->img, x, i, color);
 		i++;
@@ -97,67 +97,13 @@ void	draw_floor(t_data *data)
 	}
 }
 
-int	handle_movement(int key, t_data *data)
-{
-	static t_data	*info;
-	double	oldPlaneX;
-	double	oldDirX;
-	double	moveSpeed;
-	double	rotSpeed;
-	int		x;
-	int 	y;
-
-	if (!info)
-		info = data;
-	moveSpeed = 2;
-	rotSpeed = 2;
-	if (key == XK_w)
-	{
-		x = (int)info->ray.pos_x;
-		y = (int)info->ray.pos_y;
-		if (info->file_cont->map_arr[y][x])
-		{
-			info->ray.pos_x += info->ray.dir_x * moveSpeed;
-			info->ray.pos_y += info->ray.dir_y * moveSpeed;
-		}
-	}
-	if (key == XK_s)
-	{
-		x = (int) info->ray.pos_y;
-		y = (int) (info->ray.pos_x - info->ray.dir_x * moveSpeed);
-		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
-			info->ray.pos_x -= info->ray.dir_x * moveSpeed;
-		x = (int) info->ray.pos_x;
-		y = (int) (info->ray.pos_y - info->ray.dir_y * moveSpeed);
-		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
-			info->ray.pos_y -= info->ray.dir_y * moveSpeed;
-	}
-	if (key == XK_d)
-	{
-		oldDirX = info->ray.dir_x;
-		info->ray.dir_x = info->ray.dir_x * cos(-rotSpeed) - info->ray.dir_y * sin(-rotSpeed);
-		info->ray.dir_y = oldDirX * sin(-rotSpeed) + info->ray.dir_y * cos(-rotSpeed);
-		oldPlaneX = info->ray.plane_x;
-		info->ray.plane_x = info->ray.plane_x * cos(-rotSpeed) - info->ray.plane_y * sin(-rotSpeed);
-		info->ray.plane_y = oldPlaneX * sin(-rotSpeed) + info->ray.plane_y * cos(-rotSpeed);
-	}
-	if (key == XK_a)
-	{
-		oldDirX = info->ray.dir_x;
-		info->ray.dir_x = info->ray.dir_x * cos(rotSpeed) - info->ray.dir_y * sin(rotSpeed);
-		info->ray.dir_y = oldDirX * sin(rotSpeed) + info->ray.dir_y * cos(-rotSpeed);
-		oldPlaneX = info->ray.plane_x;
-		info->ray.plane_x = info->ray.plane_x * cos(rotSpeed) - info->ray.plane_y * sin(rotSpeed);
-		info->ray.plane_y = oldPlaneX * sin(rotSpeed) + info->ray.plane_y * cos(rotSpeed);
-	}
-	return (0);
-}
-
-void	raycast(t_data *data)
+int	raycast(void *v_data)
 {
 	int 			x;
 	static	int		i;
+	t_data *data;
 
+	data = (t_data *)v_data;
 	if (i != 1)
 	{
 		data->ray.pos_x = data->player.init_pos.x + 0.5;
@@ -248,7 +194,63 @@ void	raycast(t_data *data)
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img->mlx_img, 0, 0);
 	data->ray.oldTime = data->ray.time;
+	return (0);
+}
 
+
+int	handle_movement(int key, void *data)
+{
+	static t_data	*info;
+	double	oldPlaneX;
+	double	oldDirX;
+	double	moveSpeed;
+	double	rotSpeed;
+	int		x;
+	int 	y;
+
+	info = (t_data *)data;
+	moveSpeed = 2;
+	rotSpeed = 2;
+	if (key == XK_w)
+	{
+		x = (int)info->ray.pos_x;
+		y = (int)info->ray.pos_y;
+		if (info->file_cont->map_arr[y][x])
+		{
+			info->ray.pos_x += info->ray.dir_x * moveSpeed;
+			info->ray.pos_y += info->ray.dir_y * moveSpeed;
+		}
+	}
+	if (key == XK_s)
+	{
+		x = (int) info->ray.pos_y;
+		y = (int) (info->ray.pos_x - info->ray.dir_x * moveSpeed);
+		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
+			info->ray.pos_x -= info->ray.dir_x * moveSpeed;
+		x = (int) info->ray.pos_x;
+		y = (int) (info->ray.pos_y - info->ray.dir_y * moveSpeed);
+		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
+			info->ray.pos_y -= info->ray.dir_y * moveSpeed;
+	}
+	if (key == XK_d)
+	{
+		oldDirX = info->ray.dir_x;
+		info->ray.dir_x = info->ray.dir_x * cos(-rotSpeed) - info->ray.dir_y * sin(-rotSpeed);
+		info->ray.dir_y = oldDirX * sin(-rotSpeed) + info->ray.dir_y * cos(-rotSpeed);
+		oldPlaneX = info->ray.plane_x;
+		info->ray.plane_x = info->ray.plane_x * cos(-rotSpeed) - info->ray.plane_y * sin(-rotSpeed);
+		info->ray.plane_y = oldPlaneX * sin(-rotSpeed) + info->ray.plane_y * cos(-rotSpeed);
+	}
+	if (key == XK_a)
+	{
+		oldDirX = info->ray.dir_x;
+		info->ray.dir_x = info->ray.dir_x * cos(rotSpeed) - info->ray.dir_y * sin(rotSpeed);
+		info->ray.dir_y = oldDirX * sin(rotSpeed) + info->ray.dir_y * cos(-rotSpeed);
+		oldPlaneX = info->ray.plane_x;
+		info->ray.plane_x = info->ray.plane_x * cos(rotSpeed) - info->ray.plane_y * sin(rotSpeed);
+		info->ray.plane_y = oldPlaneX * sin(rotSpeed) + info->ray.plane_y * cos(rotSpeed);
+	}
+	return (0);
 }
 
 void	start_game(t_data *data)
@@ -258,7 +260,7 @@ void	start_game(t_data *data)
 	data->window.y = 1024;
 	data->win_ptr = mlx_new_window(data->mlx_ptr, data->window.x, data->window \
 	.y, "cub3d");
-	raycast(data);
 	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, &handle_movement, data);
+	mlx_loop_hook(data->mlx_ptr, &raycast, data);
 	mlx_loop(data->mlx_ptr);
 }
