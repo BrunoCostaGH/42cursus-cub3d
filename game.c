@@ -100,13 +100,13 @@ void	draw_floor(t_data *data)
 int	handle_movement(t_data *data)
 {
 	static t_data	*info;
-	t_vector	perpVector;
-	double	oldPlaneX;
-	double	oldDirX;
-	double	moveSpeed;
-	double	rotSpeed;
-	int		x;
-	int 	y;
+	t_vector		perpVector;
+	double			oldPlaneX;
+	double			oldDirX;
+	double			moveSpeed;
+	double			rotSpeed;
+	int				x;
+	int 			y;
 
 	info = (t_data *)data;
 	moveSpeed = 0.1;
@@ -127,8 +127,8 @@ int	handle_movement(t_data *data)
 	}
 	if (data->moves.back == true)
 	{
-		x = (int) info->ray.pos_y;
-		y = (int) (info->ray.pos_x - info->ray.dir_x * moveSpeed);
+		y = (int) info->ray.pos_y;
+		x = (int) (info->ray.pos_x - info->ray.dir_x * moveSpeed);
 		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
 			info->ray.pos_x -= info->ray.dir_x * moveSpeed;
 		x = (int) info->ray.pos_x;
@@ -138,8 +138,8 @@ int	handle_movement(t_data *data)
 	}
 	if (data->moves.left == true)
 	{
-		x = (int) info->ray.pos_y;
-		y = (int) (info->ray.pos_x - perpVector.x * moveSpeed);
+		y = (int) info->ray.pos_y;
+		x = (int) (info->ray.pos_x - perpVector.x * moveSpeed);
 		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
 			info->ray.pos_x -= perpVector.x * moveSpeed;
 		x = (int) info->ray.pos_x;
@@ -149,8 +149,8 @@ int	handle_movement(t_data *data)
 	}
 	if (data->moves.right == true)
 	{
-		x = (int) info->ray.pos_y;
-		y = (int) (info->ray.pos_x + perpVector.x * moveSpeed);
+		y = (int) info->ray.pos_y;
+		x = (int) (info->ray.pos_x + perpVector.x * moveSpeed);
 		if (info->file_cont->map_arr[y][x] == '0' ||
 			info->file_cont->map_arr[y][x] == 'N')
 			info->ray.pos_x += perpVector.x * moveSpeed;
