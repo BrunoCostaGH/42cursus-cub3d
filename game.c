@@ -97,6 +97,90 @@ void	draw_floor(t_data *data)
 	}
 }
 
+int	handle_movement(t_data *data)
+{
+	static t_data	*info;
+	t_vector	perpVector;
+	double	oldPlaneX;
+	double	oldDirX;
+	double	moveSpeed;
+	double	rotSpeed;
+	int		x;
+	int 	y;
+
+	info = (t_data *)data;
+	moveSpeed = 0.1;
+	rotSpeed = 0.1;
+
+	perpVector.x = -info->ray.dir_y;
+	perpVector.y = info->ray.dir_x;
+	if (data->moves.forward == true)
+	{
+		x = (int)(info->ray.pos_x + info->ray.dir_x * moveSpeed);
+		y = (int)info->ray.pos_y;
+		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
+			info->ray.pos_x += info->ray.dir_x * moveSpeed;
+		x = (int) info->ray.pos_x;
+		y = (int) (info->ray.pos_y + info->ray.dir_y * moveSpeed);
+		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
+			info->ray.pos_y += info->ray.dir_y * moveSpeed;
+	}
+	if (data->moves.back == true)
+	{
+		x = (int) info->ray.pos_y;
+		y = (int) (info->ray.pos_x - info->ray.dir_x * moveSpeed);
+		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
+			info->ray.pos_x -= info->ray.dir_x * moveSpeed;
+		x = (int) info->ray.pos_x;
+		y = (int) (info->ray.pos_y - info->ray.dir_y * moveSpeed);
+		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
+			info->ray.pos_y -= info->ray.dir_y * moveSpeed;
+	}
+	if (data->moves.left == true)
+	{
+		x = (int) info->ray.pos_y;
+		y = (int) (info->ray.pos_x - perpVector.x * moveSpeed);
+		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
+			info->ray.pos_x -= perpVector.x * moveSpeed;
+		x = (int) info->ray.pos_x;
+		y = (int) (info->ray.pos_y - perpVector.y * moveSpeed);
+		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
+			info->ray.pos_y -= perpVector.y * moveSpeed;
+	}
+	if (data->moves.right == true)
+	{
+		x = (int) info->ray.pos_y;
+		y = (int) (info->ray.pos_x + perpVector.x * moveSpeed);
+		if (info->file_cont->map_arr[y][x] == '0' ||
+			info->file_cont->map_arr[y][x] == 'N')
+			info->ray.pos_x += perpVector.x * moveSpeed;
+		x = (int) info->ray.pos_x;
+		y = (int) (info->ray.pos_y + perpVector.y * moveSpeed);
+		if (info->file_cont->map_arr[y][x] == '0' ||
+			info->file_cont->map_arr[y][x] == 'N')
+			info->ray.pos_y += perpVector.y * moveSpeed;
+	}
+	if (data->moves.r_left == true)
+	{
+		oldDirX = info->ray.dir_x;
+		info->ray.dir_x = info->ray.dir_x * cos(-rotSpeed) - info->ray.dir_y * sin(-rotSpeed);
+		info->ray.dir_y = oldDirX * sin(-rotSpeed) + info->ray.dir_y * cos(-rotSpeed);
+		oldPlaneX = info->ray.plane_x;
+		info->ray.plane_x = info->ray.plane_x * cos(-rotSpeed) - info->ray.plane_y * sin(-rotSpeed);
+		info->ray.plane_y = oldPlaneX * sin(-rotSpeed) + info->ray.plane_y * cos(-rotSpeed);
+	}
+	if (data->moves.r_right == true)
+	{
+		oldDirX = info->ray.dir_x;
+		info->ray.dir_x = info->ray.dir_x * cos(rotSpeed) - info->ray.dir_y * sin(rotSpeed);
+		info->ray.dir_y = oldDirX * sin(rotSpeed) + info->ray.dir_y * cos(-rotSpeed);
+		oldPlaneX = info->ray.plane_x;
+		info->ray.plane_x = info->ray.plane_x * cos(rotSpeed) - info->ray.plane_y * sin(rotSpeed);
+		info->ray.plane_y = oldPlaneX * sin(rotSpeed) + info->ray.plane_y * cos(rotSpeed);
+	}
+	return (0);
+}
+
 int	raycast(void *v_data)
 {
 	int 			x;
@@ -193,63 +277,42 @@ int	raycast(void *v_data)
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img->mlx_img, 0, 0);
-	data->ray.oldTime = data->ray.time;
+	handle_movement(data);
+	return (0);
+}
+
+int handle_keyRelease(int key, t_data *data)
+{
+	if (key == XK_w)
+		data->moves.forward = false;
+	if (key == XK_s)
+		data->moves.back = false;
+	if (key == XK_d)
+		data->moves.right = false;
+	if (key == XK_a)
+		data->moves.left = false;
+	if (key == XK_Left)
+		data->moves.r_left = false;
+	if (key == XK_Right)
+		data->moves.r_right = false;
 	return (0);
 }
 
 
-int	handle_movement(int key, void *data)
+int	handle_keypress(int key, t_data *data)
 {
-	static t_data	*info;
-	double	oldPlaneX;
-	double	oldDirX;
-	double	moveSpeed;
-	double	rotSpeed;
-	int		x;
-	int 	y;
-
-	info = (t_data *)data;
-	moveSpeed = 2;
-	rotSpeed = 2;
 	if (key == XK_w)
-	{
-		x = (int)info->ray.pos_x;
-		y = (int)info->ray.pos_y;
-		if (info->file_cont->map_arr[y][x])
-		{
-			info->ray.pos_x += info->ray.dir_x * moveSpeed;
-			info->ray.pos_y += info->ray.dir_y * moveSpeed;
-		}
-	}
+		data->moves.forward = true;
 	if (key == XK_s)
-	{
-		x = (int) info->ray.pos_y;
-		y = (int) (info->ray.pos_x - info->ray.dir_x * moveSpeed);
-		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
-			info->ray.pos_x -= info->ray.dir_x * moveSpeed;
-		x = (int) info->ray.pos_x;
-		y = (int) (info->ray.pos_y - info->ray.dir_y * moveSpeed);
-		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
-			info->ray.pos_y -= info->ray.dir_y * moveSpeed;
-	}
+		data->moves.back = true;
 	if (key == XK_d)
-	{
-		oldDirX = info->ray.dir_x;
-		info->ray.dir_x = info->ray.dir_x * cos(-rotSpeed) - info->ray.dir_y * sin(-rotSpeed);
-		info->ray.dir_y = oldDirX * sin(-rotSpeed) + info->ray.dir_y * cos(-rotSpeed);
-		oldPlaneX = info->ray.plane_x;
-		info->ray.plane_x = info->ray.plane_x * cos(-rotSpeed) - info->ray.plane_y * sin(-rotSpeed);
-		info->ray.plane_y = oldPlaneX * sin(-rotSpeed) + info->ray.plane_y * cos(-rotSpeed);
-	}
+		data->moves.right = true;
 	if (key == XK_a)
-	{
-		oldDirX = info->ray.dir_x;
-		info->ray.dir_x = info->ray.dir_x * cos(rotSpeed) - info->ray.dir_y * sin(rotSpeed);
-		info->ray.dir_y = oldDirX * sin(rotSpeed) + info->ray.dir_y * cos(-rotSpeed);
-		oldPlaneX = info->ray.plane_x;
-		info->ray.plane_x = info->ray.plane_x * cos(rotSpeed) - info->ray.plane_y * sin(rotSpeed);
-		info->ray.plane_y = oldPlaneX * sin(rotSpeed) + info->ray.plane_y * cos(rotSpeed);
-	}
+		data->moves.left = true;
+	if (key == XK_Left)
+		data->moves.r_left = true;
+	if (key == XK_Right)
+		data->moves.r_right = true;
 	return (0);
 }
 
@@ -260,7 +323,8 @@ void	start_game(t_data *data)
 	data->window.y = 1024;
 	data->win_ptr = mlx_new_window(data->mlx_ptr, data->window.x, data->window \
 	.y, "cub3d");
-	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, &handle_movement, data);
+	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, &handle_keypress, data);
+	mlx_hook(data->win_ptr, KeyRelease, KeyReleaseMask, &handle_keyRelease, data);
 	mlx_loop_hook(data->mlx_ptr, &raycast, data);
 	mlx_loop(data->mlx_ptr);
 }

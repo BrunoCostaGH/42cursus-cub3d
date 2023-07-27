@@ -50,6 +50,12 @@ t_data	*generate_data(void)
 	data->mlx_ptr = 0;
 	data->win_ptr = 0;
 	data->map_sur = 0;
+	data->moves.right = false;
+	data->moves.left = false;
+	data->moves.forward = false;
+	data->moves.back = false;
+	data->moves.r_right = false;
+	data->moves.r_left = false;
 	data->file_cont = malloc(sizeof(t_file));
 	data->img = malloc((sizeof(t_img)));
 	data->img->mlx_img = 0;

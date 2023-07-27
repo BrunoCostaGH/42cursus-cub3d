@@ -37,6 +37,16 @@ typedef struct s_point
 	int				y;
 }	t_point;
 
+typedef struct	s_moves
+{
+	bool	forward;
+	bool	back;
+	bool	right;
+	bool	left;
+	bool	r_right;
+	bool	r_left;
+}	t_moves;
+
 typedef struct s_map
 {
 	int				player;
@@ -112,6 +122,7 @@ typedef struct s_data
 	t_img			*img;
 	t_map			map;
 	t_ray			ray;
+	t_moves			moves;
 }	t_data;
 
 bool	check_if_file_exists(char *file_path, int is_cub_file);
