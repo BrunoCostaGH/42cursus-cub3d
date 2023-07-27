@@ -118,46 +118,44 @@ int	handle_movement(t_data *data)
 	{
 		x = (int)(info->ray.pos_x + info->ray.dir_x * moveSpeed);
 		y = (int)info->ray.pos_y;
-		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
+		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_x += info->ray.dir_x * moveSpeed;
 		x = (int) info->ray.pos_x;
 		y = (int) (info->ray.pos_y + info->ray.dir_y * moveSpeed);
-		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
+		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_y += info->ray.dir_y * moveSpeed;
 	}
 	if (data->moves.back == true)
 	{
 		y = (int) info->ray.pos_y;
 		x = (int) (info->ray.pos_x - info->ray.dir_x * moveSpeed);
-		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
+		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_x -= info->ray.dir_x * moveSpeed;
 		x = (int) info->ray.pos_x;
 		y = (int) (info->ray.pos_y - info->ray.dir_y * moveSpeed);
-		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
+		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_y -= info->ray.dir_y * moveSpeed;
 	}
 	if (data->moves.left == true)
 	{
 		y = (int) info->ray.pos_y;
 		x = (int) (info->ray.pos_x - perpVector.x * moveSpeed);
-		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
+		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_x -= perpVector.x * moveSpeed;
 		x = (int) info->ray.pos_x;
 		y = (int) (info->ray.pos_y - perpVector.y * moveSpeed);
-		if (info->file_cont->map_arr[y][x] == '0' || info->file_cont->map_arr[y][x] == 'N')
+		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_y -= perpVector.y * moveSpeed;
 	}
 	if (data->moves.right == true)
 	{
 		y = (int) info->ray.pos_y;
 		x = (int) (info->ray.pos_x + perpVector.x * moveSpeed);
-		if (info->file_cont->map_arr[y][x] == '0' ||
-			info->file_cont->map_arr[y][x] == 'N')
+		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_x += perpVector.x * moveSpeed;
 		x = (int) info->ray.pos_x;
 		y = (int) (info->ray.pos_y + perpVector.y * moveSpeed);
-		if (info->file_cont->map_arr[y][x] == '0' ||
-			info->file_cont->map_arr[y][x] == 'N')
+		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_y += perpVector.y * moveSpeed;
 	}
 	if (data->moves.r_left == true)

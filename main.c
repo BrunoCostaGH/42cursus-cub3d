@@ -59,8 +59,8 @@ t_data	*generate_data(void)
 	data->file_cont = malloc(sizeof(t_file));
 	data->img = malloc((sizeof(t_img)));
 	data->img->mlx_img = 0;
-	data->file_cont->textures = malloc(sizeof(char *) * 4);
-	data->file_cont->colors = malloc(sizeof(int *) * 3);
+	data->file_cont->textures = ft_calloc(4 + 1, sizeof(char *));
+	data->file_cont->colors = ft_calloc(3 + 1, sizeof(int *));
 	return (data);
 }
 

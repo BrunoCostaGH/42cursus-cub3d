@@ -40,7 +40,7 @@ int	save_path_to_struct(char *str, int id, t_data *data)
 		write(2, "\n", 1);
 		return (0);
 	}
-	data->file_cont->textures[id] = malloc(sizeof(char) * (len));
+	data->file_cont->textures[id] = ft_calloc(len + 1, sizeof(char));
 	ft_strlcpy(data->file_cont->textures[id], info[1], len);
 	return (1);
 }
@@ -76,7 +76,7 @@ int	save_rgb_to_struct(char *str, int id, t_data *data)
 		write(2, "Error: RGB values out of range\n", 31);
 		return (0);
 	}
-	data->file_cont->colors[id] = malloc(sizeof(int) * 3);
+	data->file_cont->colors[id] = ft_calloc(3 + 1, sizeof(int));
 	data->file_cont->colors[id][0] = ft_atoi(rgb[0]);
 	data->file_cont->colors[id][1] = ft_atoi(rgb[1]);
 	data->file_cont->colors[id][2] = ft_atoi(rgb[2]);
@@ -136,7 +136,7 @@ int	find_identifiers(char **str, t_data *data)
 		i++;
 	}
 	end_map = i - 1;
-	data->file_cont->map_arr = malloc(sizeof(char *) * (end_map - beg_map));
+	data->file_cont->map_arr = ft_calloc(end_map - beg_map + 1, sizeof(char *));
 	return (beg_map);
 }
 
@@ -148,20 +148,30 @@ char	**get_map(int beg_map, char **txt)
 	i = 0;
 	while (txt[i])
 		i++;
-	map = malloc(sizeof(char *) * (i - beg_map));
+	map = ft_calloc(i - beg_map + 1, sizeof(char *));
 	i = 0;
 	while (txt[beg_map])
-		map[i++] = txt[beg_map++];
+		map[i++] = ft_strdup(txt[beg_map++]);
 	return (map);
 }
 
 char	**check_for_data(char **str, t_data *data)
 {
+	int		index[2];
 	int		beg_map;
 	char	**map_val;
 
 	beg_map = find_identifiers(str, data);
 	data->file_cont->map_arr = get_map(beg_map, str);
+	index[0] = 0;
+	while (data->file_cont->map_arr[++index[0] - 1])
+	{
+		index[1] = 0;
+		while (data->file_cont->map_arr[index[0] - 1][++index[1] - 1])
+			if (is_valid_char(data->file_cont->map_arr[index[0] - 1][index[1] - 1],
+							  true))
+				data->file_cont->map_arr[index[0] - 1][index[1] - 1] = '0';
+	}
 	map_val = get_map(beg_map, str);
 	return (map_val);
 }
@@ -202,7 +212,7 @@ int	read_file(char *file_path, t_data *data)
 		write(2, " file is empty\n", 15);
 		return (0);
 	}
-	data->file_cont->txt = malloc(sizeof(char *) * lines);
+	data->file_cont->txt = ft_calloc(lines + 1, sizeof(char *));
 	fd = open(file_path, O_RDONLY);
 	while (i++ < lines)
 	{
