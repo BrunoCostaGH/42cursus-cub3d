@@ -55,14 +55,14 @@ void	get_dir_vector(t_data *data)
 	}
 	if ('E' == data->player.init_dir)
 	{
-		data->ray.dir_x = -1;
+		data->ray.dir_x = 1;
 		data->ray.dir_y = 0;
 		data->ray.plane_x = 0;
 		data->ray.plane_y = 1;
 	}
 	if ('W' == data->player.init_dir)
 	{
-		data->ray.dir_x = 1;
+		data->ray.dir_x = -1;
 		data->ray.dir_y = 0;
 		data->ray.plane_x = 0;
 		data->ray.plane_y = -1;
