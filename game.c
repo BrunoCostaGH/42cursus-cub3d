@@ -43,21 +43,29 @@ void	get_dir_vector(t_data *data)
 	{
 		data->player.init_dir_vec.x = 0;
 		data->player.init_dir_vec.y = -1;
+		data->ray.plane_x = 1;
+		data->ray.plane_y = 0;
 	}
 	if ('S' == data->player.init_dir)
 	{
 		data->player.init_dir_vec.x = 0;
 		data->player.init_dir_vec.y = 1;
+		data->ray.plane_x = -1;
+		data->ray.plane_y = 0;
 	}
 	if ('E' == data->player.init_dir)
 	{
-		data->player.init_dir_vec.x = 1;
+		data->player.init_dir_vec.x = -1;
 		data->player.init_dir_vec.y = 0;
+		data->ray.plane_x = 0;
+		data->ray.plane_y = 1;
 	}
 	if ('W' == data->player.init_dir)
 	{
-		data->player.init_dir_vec.x = -1;
+		data->player.init_dir_vec.x = 1;
 		data->player.init_dir_vec.y = 0;
+		data->ray.plane_x = 0;
+		data->ray.plane_y = -1;
 	}
 }
 
@@ -100,7 +108,6 @@ void	draw_floor(t_data *data)
 int	handle_movement(t_data *data)
 {
 	static t_data	*info;
-	t_vector		perpVector;
 	double			oldPlaneX;
 	double			oldDirX;
 	double			moveSpeed;
@@ -111,9 +118,6 @@ int	handle_movement(t_data *data)
 	info = (t_data *)data;
 	moveSpeed = 0.1;
 	rotSpeed = 0.1;
-
-	perpVector.x = -info->ray.dir_y;
-	perpVector.y = info->ray.dir_x;
 	if (data->moves.forward == true)
 	{
 		x = (int)(info->ray.pos_x + info->ray.dir_x * moveSpeed);
@@ -139,24 +143,24 @@ int	handle_movement(t_data *data)
 	if (data->moves.left == true)
 	{
 		y = (int) info->ray.pos_y;
-		x = (int) (info->ray.pos_x - perpVector.x * moveSpeed);
+		x = (int) (info->ray.pos_x - info->ray.plane_x * moveSpeed);
 		if (info->file_cont->map_arr[y][x] == '0')
-			info->ray.pos_x -= perpVector.x * moveSpeed;
+			info->ray.pos_x -= info->ray.plane_x * moveSpeed;
 		x = (int) info->ray.pos_x;
-		y = (int) (info->ray.pos_y - perpVector.y * moveSpeed);
+		y = (int) (info->ray.pos_y - info->ray.plane_y * moveSpeed);
 		if (info->file_cont->map_arr[y][x] == '0')
-			info->ray.pos_y -= perpVector.y * moveSpeed;
+			info->ray.pos_y -= info->ray.plane_y * moveSpeed;
 	}
 	if (data->moves.right == true)
 	{
 		y = (int) info->ray.pos_y;
-		x = (int) (info->ray.pos_x + perpVector.x * moveSpeed);
+		x = (int) (info->ray.pos_x + info->ray.plane_x * moveSpeed);
 		if (info->file_cont->map_arr[y][x] == '0')
-			info->ray.pos_x += perpVector.x * moveSpeed;
+			info->ray.pos_x += info->ray.plane_x * moveSpeed;
 		x = (int) info->ray.pos_x;
-		y = (int) (info->ray.pos_y + perpVector.y * moveSpeed);
+		y = (int) (info->ray.pos_y + info->ray.plane_y * moveSpeed);
 		if (info->file_cont->map_arr[y][x] == '0')
-			info->ray.pos_y += perpVector.y * moveSpeed;
+			info->ray.pos_y += info->ray.plane_y * moveSpeed;
 	}
 	if (data->moves.r_left == true)
 	{
@@ -171,7 +175,7 @@ int	handle_movement(t_data *data)
 	{
 		oldDirX = info->ray.dir_x;
 		info->ray.dir_x = info->ray.dir_x * cos(rotSpeed) - info->ray.dir_y * sin(rotSpeed);
-		info->ray.dir_y = oldDirX * sin(rotSpeed) + info->ray.dir_y * cos(-rotSpeed);
+		info->ray.dir_y = oldDirX * sin(rotSpeed) + info->ray.dir_y * cos(rotSpeed);
 		oldPlaneX = info->ray.plane_x;
 		info->ray.plane_x = info->ray.plane_x * cos(rotSpeed) - info->ray.plane_y * sin(rotSpeed);
 		info->ray.plane_y = oldPlaneX * sin(rotSpeed) + info->ray.plane_y * cos(rotSpeed);
@@ -193,10 +197,14 @@ int	raycast(void *v_data)
 		get_dir_vector(data);
 		data->ray.dir_x = data->player.init_dir_vec.x;
 		data->ray.dir_y = data->player.init_dir_vec.y;
-		data->ray.plane_x = 1;
-		data->ray.plane_y = 0;
-		//time = 0;
-		//oldTime = 0;
+		/*if (data->ray.dir_x == 0)
+			data->ray.plane_y = 0;
+		else
+			data->ray.plane_y = -data->ray.dir_x;
+		if (data->ray.dir_y == 0)
+			data->ray.plane_x = 0;
+		else
+			data->ray.plane_x = -data->ray.dir_y;*/
 		i = 1;
 	}
 	if (data->img->mlx_img)
