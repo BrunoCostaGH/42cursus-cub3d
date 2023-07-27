@@ -41,29 +41,29 @@ void	get_dir_vector(t_data *data)
 {
 	if ('N' == data->player.init_dir)
 	{
-		data->player.init_dir_vec.x = 0;
-		data->player.init_dir_vec.y = -1;
+		data->ray.dir_x = 0;
+		data->ray.dir_y = -1;
 		data->ray.plane_x = 1;
 		data->ray.plane_y = 0;
 	}
 	if ('S' == data->player.init_dir)
 	{
-		data->player.init_dir_vec.x = 0;
-		data->player.init_dir_vec.y = 1;
+		data->ray.dir_x = 0;
+		data->ray.dir_y = 1;
 		data->ray.plane_x = -1;
 		data->ray.plane_y = 0;
 	}
 	if ('E' == data->player.init_dir)
 	{
-		data->player.init_dir_vec.x = -1;
-		data->player.init_dir_vec.y = 0;
+		data->ray.dir_x = -1;
+		data->ray.dir_y = 0;
 		data->ray.plane_x = 0;
 		data->ray.plane_y = 1;
 	}
 	if ('W' == data->player.init_dir)
 	{
-		data->player.init_dir_vec.x = 1;
-		data->player.init_dir_vec.y = 0;
+		data->ray.dir_x = 1;
+		data->ray.dir_y = 0;
 		data->ray.plane_x = 0;
 		data->ray.plane_y = -1;
 	}
@@ -195,16 +195,6 @@ int	raycast(void *v_data)
 		data->ray.pos_x = data->player.init_pos.x + 0.5;
 		data->ray.pos_y = data->player.init_pos.y + 0.5;
 		get_dir_vector(data);
-		data->ray.dir_x = data->player.init_dir_vec.x;
-		data->ray.dir_y = data->player.init_dir_vec.y;
-		/*if (data->ray.dir_x == 0)
-			data->ray.plane_y = 0;
-		else
-			data->ray.plane_y = -data->ray.dir_x;
-		if (data->ray.dir_y == 0)
-			data->ray.plane_x = 0;
-		else
-			data->ray.plane_x = -data->ray.dir_y;*/
 		i = 1;
 	}
 	if (data->img->mlx_img)
