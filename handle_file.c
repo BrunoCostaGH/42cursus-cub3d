@@ -40,8 +40,8 @@ int	save_path_to_struct(char *str, int id, t_data *data)
 		write(2, "\n", 1);
 		return (0);
 	}
-	data->file_cont->textures[id] = ft_calloc(len + 1, sizeof(char));
-	ft_strlcpy(data->file_cont->textures[id], info[1], len);
+	data->file_cont->textures_path[id] = ft_calloc(len + 1, sizeof(char));
+	ft_strlcpy(data->file_cont->textures_path[id], info[1], len);
 	return (1);
 }
 
@@ -113,8 +113,8 @@ bool	is_empty_line(char *str)
 
 bool	is_valid_struct(t_data *data)
 {
-	if (data->file_cont->textures[0] && data->file_cont->textures[1] && \
-	data->file_cont->textures[2])
+	if (data->file_cont->textures_path[0] && data->file_cont->textures_path[1] && \
+	data->file_cont->textures_path[2])
 		if (data->file_cont->colors[0] && data->file_cont->colors[1])
 			return (true);
 	return (false);

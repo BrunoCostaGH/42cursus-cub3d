@@ -67,7 +67,7 @@ typedef struct s_img
 typedef struct s_file
 {
 	char			**txt;
-	char			**textures;
+	char			**textures_path;
 	int				**colors;
 	char			**map_arr;
 }	t_file;
@@ -107,7 +107,26 @@ typedef struct	s_ray
 	int 			draw_start;
 	int 			draw_end;
 	int				color;
+	char 			*tex_to_apply;
+	char			**tex_matrix;
 }	t_ray;
+
+typedef struct s_pixelData
+{
+	char			symbol;
+	int				hex_color;
+}	t_pixelData;
+
+typedef struct s_texData
+{
+	char 			**tex_array;
+	char 			*tex_symbols;
+	int				*tex_colors;
+	int				columns;
+	int				rows;
+	int				n_of_colors;
+	t_pixelData		*pixelData;
+}	t_texData;
 
 typedef struct s_data
 {
@@ -123,6 +142,7 @@ typedef struct s_data
 	t_map			map;
 	t_ray			ray;
 	t_moves			moves;
+	t_texData		*texData;
 }	t_data;
 
 bool	check_if_file_exists(char *file_path, int is_cub_file);
@@ -131,10 +151,12 @@ bool	is_valid_char(char c, bool for_player);
 
 int		get_init_player_pos(t_data *data, char **map, int y);
 int		read_file(char *file_path, t_data *data);
+int		get_n_colors(t_data *data, int id);
 
 char	**check_for_data(char **str, t_data *data);
 char	**get_map(int beg_map, char **txt);
 
 void	start_game(t_data *data);
+void	parse_textures(t_data *data);
 
 #endif

@@ -183,6 +183,55 @@ int	handle_movement(t_data *data)
 	return (0);
 }
 
+/*void	apply_texture(t_data *data)
+{
+	double	wallX;
+	double	step;
+	double	texPos;
+	int		texX;
+	//int		texY;
+	int		y;
+	//u_int32_t color;
+
+	if (data->ray.side == 0)
+	{
+		wallX = data->ray.pos_y + data->ray.perp_wall_dist * data->ray.ray_dir_y;
+		wallX -= data->ray.mapY;
+	}
+	else
+	{
+		wallX = data->ray.pos_x + data->ray.perp_wall_dist * data->ray.ray_dir_x;
+		wallX -= data->ray.mapX;
+	}
+	texX = (int) (wallX * (double)data->texData[0].columns);
+	if (data->ray.side == 0 && data->ray.ray_dir_x > 0)
+		texX = data->texData[0].columns - texX - 1;
+	if (data->ray.side == 1 && data->ray.ray_dir_y < 0)
+		texX = data->texData[0].columns - texX - 1;
+	step = 1.0 * data->texData[0].rows / data->ray.line_height;
+	texPos = (data->ray.draw_start - data->window.y / 2 + data->ray.line_height / 2) * step;
+	y = data->ray.draw_start;
+	while (y < data->ray.draw_end)
+	{
+		texY = (int) texPos & (data->texData[0].rows - 1);
+		texPos += step;
+		//color =
+		y++;
+	}
+}*/
+
+void	texture_picker(t_data *data)
+{
+	if (data->ray.dir_x < 0 && data->ray.side == 1)
+		data->ray.tex_to_apply = data->file_cont->textures_path[3];
+	if (data->ray.dir_x > 0 && data->ray.side == 1)
+		data->ray.tex_to_apply = data->file_cont->textures_path[2];
+	if (data->ray.dir_y < 0 && data->ray.side == 0)
+		data->ray.tex_to_apply = data->file_cont->textures_path[1];
+	if (data->ray.dir_x > 0 && data->ray.side == 0)
+		data->ray.tex_to_apply = data->file_cont->textures_path[0];
+}
+
 int	raycast(void *v_data)
 {
 	int 			x;
@@ -269,6 +318,8 @@ int	raycast(void *v_data)
 			data->ray.draw_end = data->window.x - 1;
 		if (data->ray.side == 0)
 			data->ray.color = encode_rgb(255 / 2, 0, 0);
+		texture_picker(data);
+		//apply_texture(data);
 		draw_vert_line(data, x, data->ray.draw_start, data->ray.draw_end, data->ray.color);
 		x++;
 	}
@@ -315,8 +366,6 @@ int	handle_keypress(int key, t_data *data)
 void	start_game(t_data *data)
 {
 	data->mlx_ptr = mlx_init();
-	data->window.x = 1280;
-	data->window.y = 1024;
 	data->win_ptr = mlx_new_window(data->mlx_ptr, data->window.x, data->window \
 	.y, "cub3d");
 	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, &handle_keypress, data);
