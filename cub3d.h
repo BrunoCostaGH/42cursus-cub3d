@@ -47,14 +47,6 @@ typedef struct	s_moves
 	bool	r_left;
 }	t_moves;
 
-typedef struct s_map
-{
-	int				player;
-	char			**map_arr;
-	char			**map_val;
-	t_point			map_size;
-}	t_map;
-
 typedef struct s_img
 {
 	void			*mlx_img;
@@ -75,7 +67,6 @@ typedef struct s_file
 typedef struct s_player
 {
 	t_point			init_pos;
-	t_vector		init_dir_vec;
 	char			init_dir;
 }	t_player;
 
@@ -87,8 +78,6 @@ typedef struct	s_ray
 	double			dir_y;
 	double			plane_x;
 	double			plane_y;
-	double			time;
-	double			oldTime;
 	double			cameraX;
 	double 			ray_dir_x;
 	double 			ray_dir_y;
@@ -113,14 +102,10 @@ typedef struct s_data
 {
 	void			*mlx_ptr;
 	void			*win_ptr;
-	int				map_sur;
-	t_point			flood_point;
-	t_point			max;
 	t_vector 		window;
 	t_player		player;
 	t_file			*file_cont;
 	t_img			*img;
-	t_map			map;
 	t_ray			ray;
 	t_moves			moves;
 }	t_data;
@@ -136,5 +121,7 @@ char	**check_for_data(char **str, t_data *data);
 char	**get_map(int beg_map, char **txt);
 
 void	start_game(t_data *data);
+void	free_char_arr(char **info);
+void	free_int_arr(int **info);
 
 #endif
