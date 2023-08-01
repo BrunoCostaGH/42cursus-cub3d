@@ -46,13 +46,18 @@ void	free_char_arr(char **info)
  */
 int	save_path_to_struct(char *str, int id, t_data *data)
 {
+	char	*temp[2];
 	char	**info;
 	int		len;
 
 	info = ft_split(str, ' ');
 	len = ft_strlen(info[1]);
-	info[1] = ft_strtrim(info[1], "\n\r");
-	info[0] = ft_strtrim(info[0], "\n\r");
+	temp[1] = ft_strtrim(info[1], "\n\r");
+	temp[0] = ft_strtrim(info[0], "\n\r");
+	free(info[0]);
+	free(info[1]);
+	info[0] = temp[0];
+	info[1] = temp[1];
 	if (info[2])
 	{
 		free_char_arr(info);
@@ -80,12 +85,17 @@ int	save_path_to_struct(char *str, int id, t_data *data)
  */
 int	save_rgb_to_struct(char *str, int id, t_data *data)
 {
+	char	*temp[2];
 	char	**info;
 	char	**rgb;
 
 	info = ft_split(str, ' ');
-	info[1] = ft_strtrim(info[1], "\n\r");
-	info[0] = ft_strtrim(info[1], "\n\r");
+	temp[1] = ft_strtrim(info[1], "\n\r");
+	temp[0] = ft_strtrim(info[0], "\n\r");
+	free(info[0]);
+	free(info[1]);
+	info[0] = temp[0];
+	info[1] = temp[1];
 	if (info[2])
 	{
 		free_char_arr(info);
@@ -160,7 +170,6 @@ int	find_identifiers(char **str, t_data *data)
 {
 	int	i;
 	int	beg_map;
-	int	end_map;
 
 	i = 0;
 	beg_map = -1;
@@ -171,7 +180,6 @@ int	find_identifiers(char **str, t_data *data)
 			beg_map = i;
 		i++;
 	}
-	end_map = i - 1;
 	return (beg_map);
 }
 
