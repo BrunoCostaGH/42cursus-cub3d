@@ -230,6 +230,47 @@ void	apply_texture(t_data *data, int x, int id)
  * id 2 is W texture
  * id 3 is E texture
  */
+
+void	texture_picker(t_data *data)
+{
+	if (data->ray.ray_dir_x < 0)
+	{
+		if (data->ray.side == 0)
+		{
+			data->id = 3;
+			return ;
+		}
+		if (data->ray.ray_dir_y < 0)
+		{
+			data->id = 1;
+			return ;
+		}
+		else
+		{
+			data->id = 0;
+			return ;
+		}
+	}
+	else
+	{
+		if (data->ray.side == 0)
+		{
+			data->id = 2;
+			return ;
+		}
+		if (data->ray.ray_dir_y < 0)
+		{
+			data->id = 1;
+			return ;
+		}
+		else
+		{
+			data->id = 0;
+			return ;
+		}
+	}
+}
+/*
 void	texture_picker(t_data *data)
 {
 	//Left side
@@ -272,7 +313,7 @@ void	texture_picker(t_data *data)
 		data->id = 0;
 		return ;
 	}
-}
+}*/
 
 int	raycast(void *v_data)
 {
