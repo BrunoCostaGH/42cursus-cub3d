@@ -218,11 +218,8 @@ void	apply_texture(t_data *data, int x, int id)
 	{
 		texY = (int) texPos & (64 - 1);
 		texPos += step;
-		if (texX >= 0)
-		{
-			color = gix(data->tex_img[id], texX, texY + (64 * id));
-			pix(data->img, x, y, color);
-		}
+		color = gix(data->tex_img[id], texX, texY + (64 * id));
+		pix(data->img, x, y, color);
 		y++;
 	}
 }
@@ -235,33 +232,46 @@ void	apply_texture(t_data *data, int x, int id)
  */
 void	texture_picker(t_data *data)
 {
-	if (data->ray.dir_x < 0 && data->ray.dir_y < 0 && data->ray.side == 0)
-		data->id = 1;
-	if (data->ray.dir_x < 0 && data->ray.dir_y > 0 && data->ray.side == 0)
+	//Left side
+	if (data->ray.ray_dir_x < 0 && data->ray.ray_dir_y < 0 && data->ray.side == 1)
 		data->id = 0;
-	if (data->ray.dir_x < 0 && data->ray.side == 1)
+	else if (data->ray.ray_dir_x < 0 && data->ray.ray_dir_y > 0 && data->ray.side == 1)
+		data->id = 1;
+	else if (data->ray.ray_dir_x < 0 && data->ray.side == 0)
+	{
+		data->id = 2;
+		return ;
+	}
+	//Right side
+	if (data->ray.ray_dir_x > 0 && data->ray.ray_dir_y > 0 && data->ray.side == 1)
+		data->id = 0;
+	else if (data->ray.ray_dir_x > 0 && data->ray.ray_dir_y < 0 && data->ray.side == 1)
+		data->id = 1;
+	else if (data->ray.ray_dir_x > 0 && data->ray.side == 0)
+	{
 		data->id = 3;
-
-	if (data->ray.dir_y < 0 && data->ray.dir_x > 0 && data->ray.side == 1)
+		return ;
+	}
+	//North side
+	if (data->ray.ray_dir_y < 0 && data->ray.ray_dir_x > 0 && data->ray.side == 0)
 		data->id = 2;
-	if (data->ray.dir_y < 0 && data->ray.dir_x < 0 && data->ray.side == 1)
+	else if (data->ray.ray_dir_y < 0 && data->ray.ray_dir_x < 0 && data->ray.side == 0)
 		data->id = 3;
-	if (data->ray.dir_y < 0 && data->ray.side == 0)
+	else if (data->ray.ray_dir_y < 0 && data->ray.side == 1)
+	{
 		data->id = 1;
-
-	if (data->ray.dir_x > 0 && data->ray.dir_y > 0 && data->ray.side == 0)
-		data->id = 0;
-	if (data->ray.dir_x > 0 && data->ray.dir_y < 0 && data->ray.side == 0)
-		data->id = 1;
-	if (data->ray.dir_x > 0 && data->ray.side == 1)
+		return ;
+	}
+	//South side
+	if (data->ray.ray_dir_y > 0 && data->ray.ray_dir_x > 0 && data->ray.side == 0)
 		data->id = 2;
-
-	if (data->ray.dir_y > 0 && data->ray.dir_x > 0 && data->ray.side == 1)
-		data->id = 2;
-	if (data->ray.dir_y > 0 && data->ray.dir_x < 0 && data->ray.side == 1)
-		data->id = 1;
-	if (data->ray.dir_y > 0 && data->ray.side == 0)
+	else if (data->ray.ray_dir_y > 0 && data->ray.ray_dir_x < 0 && data->ray.side == 0)
+		data->id = 3;
+	else if (data->ray.ray_dir_y > 0 && data->ray.side == 1)
+	{
 		data->id = 0;
+		return ;
+	}
 }
 
 int	raycast(void *v_data)
@@ -356,7 +366,6 @@ int	raycast(void *v_data)
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img->mlx_img, 0, 0);
-	//mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[1]->mlx_img, 0, 0);
 	handle_movement(data);
 	return (0);
 }
@@ -408,8 +417,9 @@ void	load_textures(t_data *data)
 	{
 		//k = 0;
 		data->tex_img[i]->mlx_img = mlx_new_image(data->mlx_ptr, size, size);
-		data->tex_img[i]->addr = mlx_get_data_addr(data->tex_img[i]->mlx_img, &data->tex_img[i]->bits_per_pixel, &data->tex_img[i]->line_length, &data->tex_img[i]->endian);
 		data->tex_img[i]->mlx_img = mlx_xpm_file_to_image(data->mlx_ptr, data->file_cont->textures_path[i], &size, &size);
+		data->tex_img[i]->addr = mlx_get_data_addr(data->tex_img[i]->mlx_img, &data->tex_img[i]->bits_per_pixel, &data->tex_img[i]->line_length, &data->tex_img[i]->endian);
+		mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[i]->mlx_img, 0, size * i);
 		/*while (k <= 64)
 		{
 			draw_vert_line(data->tex_img[i],k, 0, 64, encode_rgb(255, 0, 0));
@@ -417,10 +427,6 @@ void	load_textures(t_data *data)
 		}*/
 		i++;
 	}
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[0]->mlx_img, 0, 0);
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[1]->mlx_img, 0, size);
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[2]->mlx_img, 0, size * 2);
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[3]->mlx_img, 0, size * 3);
 }
 
 void	start_game(t_data *data)
