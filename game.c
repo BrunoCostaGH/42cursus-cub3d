@@ -17,6 +17,12 @@ int	encode_rgb(int red, int green, int blue)
 	return (red << 16 | green << 8 | blue);
 }
 
+unsigned int	gix(t_img *img, int x, int y)
+{
+	return (*(unsigned int *)((img->addr + (y * img->line_length) + \
+	x * (img->bits_per_pixel / 8))));
+}
+
 void	pix(t_img *img, int x, int y, int color)
 {
 	char		*dst;
@@ -25,14 +31,14 @@ void	pix(t_img *img, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-void	draw_vert_line(t_data *data, int x, int draw_start, int draw_end, int color)
+void	draw_vert_line(t_img *img, int x, int draw_start, int draw_end, int color)
 {
 	int	i;
 
 	i = draw_start;
-	while(i <= draw_end && i < data->window.y && x < data->window.x)
+	while(i <= draw_end)
 	{
-		pix(data->img, x, i, color);
+		pix(img, x, i, color);
 		i++;
 	}
 }
@@ -82,7 +88,7 @@ void	draw_ceiling(t_data *data)
 	x = 0;
 	while (x <= data->window.x)
 	{
-		draw_vert_line(data, x, 0, data->window.y / 2, encode_rgb(red, green, blue));
+		draw_vert_line(data->img, x, 0, data->window.y / 2, encode_rgb(red, green, blue));
 		x++;
 	}
 }
@@ -100,7 +106,7 @@ void	draw_floor(t_data *data)
 	x = 0;
 	while (x <= data->window.x)
 	{
-		draw_vert_line(data, x, data->window.y / 2, data->window.y, encode_rgb(red, green, blue));
+		draw_vert_line(data->img, x, data->window.y / 2, data->window.y, encode_rgb(red, green, blue));
 		x++;
 	}
 }
@@ -183,15 +189,15 @@ int	handle_movement(t_data *data)
 	return (0);
 }
 
-/*void	apply_texture(t_data *data)
+void	apply_texture(t_data *data, int x, int id)
 {
-	double	wallX;
-	double	step;
-	double	texPos;
-	int		texX;
-	//int		texY;
-	int		y;
-	//u_int32_t color;
+	double			wallX;
+	double			step;
+	double			texPos;
+	int				texX;
+	int				texY;
+	int				y;
+	unsigned int	color;
 
 	if (data->ray.side == 0)
 	{
@@ -203,33 +209,59 @@ int	handle_movement(t_data *data)
 		wallX = data->ray.pos_x + data->ray.perp_wall_dist * data->ray.ray_dir_x;
 		wallX -= data->ray.mapX;
 	}
-	texX = (int) (wallX * (double)data->texData[0].columns);
-	if (data->ray.side == 0 && data->ray.ray_dir_x > 0)
-		texX = data->texData[0].columns - texX - 1;
-	if (data->ray.side == 1 && data->ray.ray_dir_y < 0)
-		texX = data->texData[0].columns - texX - 1;
-	step = 1.0 * data->texData[0].rows / data->ray.line_height;
+	texX = (int) (wallX * (double)64);
+	texX = 64 - texX - 1;
+	step = 1.0 * 64 / data->ray.line_height;
 	texPos = (data->ray.draw_start - data->window.y / 2 + data->ray.line_height / 2) * step;
 	y = data->ray.draw_start;
-	while (y < data->ray.draw_end)
+	while (y < data->ray.draw_end && y < data->window.y)
 	{
-		texY = (int) texPos & (data->texData[0].rows - 1);
+		texY = (int) texPos & (64 - 1);
 		texPos += step;
-		//color =
+		if (texX >= 0)
+		{
+			color = gix(data->tex_img[id], texX, texY + (64 * id));
+			pix(data->img, x, y, color);
+		}
 		y++;
 	}
-}*/
+}
 
+/*
+ * id 0 is N texture
+ * id 1 is S texture
+ * id 2 is W texture
+ * id 3 is E texture
+ */
 void	texture_picker(t_data *data)
 {
+	if (data->ray.dir_x < 0 && data->ray.dir_y < 0 && data->ray.side == 0)
+		data->id = 1;
+	if (data->ray.dir_x < 0 && data->ray.dir_y > 0 && data->ray.side == 0)
+		data->id = 0;
 	if (data->ray.dir_x < 0 && data->ray.side == 1)
-		data->ray.tex_to_apply = data->file_cont->textures_path[3];
-	if (data->ray.dir_x > 0 && data->ray.side == 1)
-		data->ray.tex_to_apply = data->file_cont->textures_path[2];
+		data->id = 3;
+
+	if (data->ray.dir_y < 0 && data->ray.dir_x > 0 && data->ray.side == 1)
+		data->id = 2;
+	if (data->ray.dir_y < 0 && data->ray.dir_x < 0 && data->ray.side == 1)
+		data->id = 3;
 	if (data->ray.dir_y < 0 && data->ray.side == 0)
-		data->ray.tex_to_apply = data->file_cont->textures_path[1];
-	if (data->ray.dir_x > 0 && data->ray.side == 0)
-		data->ray.tex_to_apply = data->file_cont->textures_path[0];
+		data->id = 1;
+
+	if (data->ray.dir_x > 0 && data->ray.dir_y > 0 && data->ray.side == 0)
+		data->id = 0;
+	if (data->ray.dir_x > 0 && data->ray.dir_y < 0 && data->ray.side == 0)
+		data->id = 1;
+	if (data->ray.dir_x > 0 && data->ray.side == 1)
+		data->id = 2;
+
+	if (data->ray.dir_y > 0 && data->ray.dir_x > 0 && data->ray.side == 1)
+		data->id = 2;
+	if (data->ray.dir_y > 0 && data->ray.dir_x < 0 && data->ray.side == 1)
+		data->id = 1;
+	if (data->ray.dir_y > 0 && data->ray.side == 0)
+		data->id = 0;
 }
 
 int	raycast(void *v_data)
@@ -319,11 +351,12 @@ int	raycast(void *v_data)
 		if (data->ray.side == 0)
 			data->ray.color = encode_rgb(255 / 2, 0, 0);
 		texture_picker(data);
-		//apply_texture(data);
-		draw_vert_line(data, x, data->ray.draw_start, data->ray.draw_end, data->ray.color);
+		apply_texture(data, x, data->id);
+		//draw_vert_line(data, x, data->ray.draw_start, data->ray.draw_end, data->ray.color);
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img->mlx_img, 0, 0);
+	//mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[1]->mlx_img, 0, 0);
 	handle_movement(data);
 	return (0);
 }
@@ -363,11 +396,39 @@ int	handle_keypress(int key, t_data *data)
 	return (0);
 }
 
+void	load_textures(t_data *data)
+{
+	int i;
+	int size;
+	//int k;
+
+	i = 0;
+	size = 64;
+	while (i < 4)
+	{
+		//k = 0;
+		data->tex_img[i]->mlx_img = mlx_new_image(data->mlx_ptr, size, size);
+		data->tex_img[i]->addr = mlx_get_data_addr(data->tex_img[i]->mlx_img, &data->tex_img[i]->bits_per_pixel, &data->tex_img[i]->line_length, &data->tex_img[i]->endian);
+		data->tex_img[i]->mlx_img = mlx_xpm_file_to_image(data->mlx_ptr, data->file_cont->textures_path[i], &size, &size);
+		/*while (k <= 64)
+		{
+			draw_vert_line(data->tex_img[i],k, 0, 64, encode_rgb(255, 0, 0));
+			k++;
+		}*/
+		i++;
+	}
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[0]->mlx_img, 0, 0);
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[1]->mlx_img, 0, size);
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[2]->mlx_img, 0, size * 2);
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[3]->mlx_img, 0, size * 3);
+}
+
 void	start_game(t_data *data)
 {
 	data->mlx_ptr = mlx_init();
 	data->win_ptr = mlx_new_window(data->mlx_ptr, data->window.x, data->window \
 	.y, "cub3d");
+	load_textures(data);
 	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, &handle_keypress, data);
 	mlx_hook(data->win_ptr, KeyRelease, KeyReleaseMask, &handle_keyRelease, data);
 	mlx_loop_hook(data->mlx_ptr, &raycast, data);

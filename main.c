@@ -68,7 +68,9 @@ void	generate_texture_data(t_data *data)
 t_data	*generate_data(void)
 {
 	t_data	*data;
+	int		i;
 
+	i = 0;
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (0);
@@ -86,6 +88,13 @@ t_data	*generate_data(void)
 	data->file_cont = malloc(sizeof(t_file));
 	data->img = malloc((sizeof(t_img)));
 	data->img->mlx_img = 0;
+	data->tex_img = malloc(sizeof(t_img *) * 4);
+	while (i < 4)
+	{
+		data->tex_img[i] = malloc(sizeof(t_img));
+		data->tex_img[i]->mlx_img = 0;
+		i++;
+	}
 	data->file_cont->textures_path = ft_calloc(4 + 1, sizeof(char *));
 	data->file_cont->colors = ft_calloc(3 + 1, sizeof(int *));
 	return (data);
@@ -105,8 +114,8 @@ int	main(int ac, char **av)
 		write(2, "Error: Invalid .cub file\n", 25);
 		return (1);
 	}
-	generate_texture_data(data);
-	parse_textures(data);
+	//generate_texture_data(data);
+	//parse_textures(data);
 	start_game(data);
 	print_struct(data);
 }

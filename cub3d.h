@@ -133,12 +133,14 @@ typedef struct s_data
 	void			*mlx_ptr;
 	void			*win_ptr;
 	int				map_sur;
+	int				id;
 	t_point			flood_point;
 	t_point			max;
 	t_vector 		window;
 	t_player		player;
 	t_file			*file_cont;
 	t_img			*img;
+	t_img			**tex_img;
 	t_map			map;
 	t_ray			ray;
 	t_moves			moves;
