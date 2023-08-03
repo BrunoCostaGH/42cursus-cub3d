@@ -216,9 +216,9 @@ void	apply_texture(t_data *data, int x, int id)
 	y = data->ray.draw_start;
 	while (y < data->ray.draw_end && y < data->window.y)
 	{
-		texY = (int) texPos & (64 - 1);
+		texY = ((int) texPos & (64 - 1));
 		texPos += step;
-		color = gix(data->tex_img[id], texX, texY + (64 * id));
+		color = gix(data->tex_img[id], texX, texY);
 		pix(data->img, x, y, color);
 		y++;
 	}
@@ -460,7 +460,7 @@ void	load_textures(t_data *data)
 		data->tex_img[i]->mlx_img = mlx_new_image(data->mlx_ptr, size, size);
 		data->tex_img[i]->mlx_img = mlx_xpm_file_to_image(data->mlx_ptr, data->file_cont->textures_path[i], &size, &size);
 		data->tex_img[i]->addr = mlx_get_data_addr(data->tex_img[i]->mlx_img, &data->tex_img[i]->bits_per_pixel, &data->tex_img[i]->line_length, &data->tex_img[i]->endian);
-		mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[i]->mlx_img, 0, size * i);
+		//mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[i]->mlx_img, 0, size * i);
 		/*while (k <= 64)
 		{
 			draw_vert_line(data->tex_img[i],k, 0, 64, encode_rgb(255, 0, 0));

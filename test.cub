@@ -1,10 +1,10 @@
-F 255,0,0
+F 0,0,0
 C 0,200,255
 
-NO ./sprites/n_texture.xpm
-SO ./sprites/s_texture.xpm
-WE ./sprites/w_texture.xpm
-EA ./sprites/e_texture.xpm
+NO ./sprites/colorstone.xpm
+SO ./sprites/greystone.xpm
+WE ./sprites/redbrick.xpm
+EA ./sprites/wood.xpm
 
 
 
