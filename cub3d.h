@@ -70,6 +70,7 @@ typedef struct s_file
 	char			**textures_path;
 	int				**colors;
 	char			**map_arr;
+	t_point			map_size;
 }	t_file;
 
 typedef struct s_player
@@ -149,15 +150,18 @@ bool	valid_cub_file(char *file_path, t_data *data);
 bool	is_valid_char(char c, bool for_player);
 
 int		get_init_player_pos(t_data *data, char **map, int y);
+int		encode_rgb(int red, int green, int blue);
 int		read_file(char *file_path, t_data *data);
 int		get_n_colors(t_data *data, int id);
 
 char	**check_for_data(char **str, t_data *data);
 char	**get_map(int beg_map, char **txt);
 
+void	init_minimap(t_data *data);
 void	start_game(t_data *data);
 void	parse_textures(t_data *data);
 void	free_char_arr(char **info);
 void	free_int_arr(int **info);
+void	pix(t_img *img, int x, int y, int color);
 
 #endif

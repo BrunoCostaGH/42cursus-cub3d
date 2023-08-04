@@ -520,5 +520,6 @@ void	start_game(t_data *data)
 	mlx_hook(data->win_ptr, KeyRelease, KeyReleaseMask, &handle_keyRelease, data);
 	mlx_hook(data->win_ptr, 17, 1L << 17, free_game, data);
 	mlx_loop_hook(data->mlx_ptr, &raycast, data);
+	init_minimap(data);
 	mlx_loop(data->mlx_ptr);
 }
