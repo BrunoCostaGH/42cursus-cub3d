@@ -76,7 +76,7 @@ t_data	*generate_data(void)
 		return (0);
 	data->mlx_ptr = 0;
 	data->win_ptr = 0;
-	data->map_sur = 0;
+	data->player.init_dir = 0;
 	data->moves.right = false;
 	data->moves.left = false;
 	data->moves.forward = false;

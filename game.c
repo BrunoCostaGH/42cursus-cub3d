@@ -12,6 +12,33 @@
 
 #include "cub3d.h"
 
+void	free_file_cont(t_data *data)
+{
+	free_char_arr(data->file_cont->map_arr);
+	free_char_arr(data->file_cont->txt);
+	free_char_arr(data->file_cont->textures);
+	free_int_arr(data->file_cont->colors);
+	free(data->file_cont);
+}
+
+int	free_game(t_data *data)
+{
+	if (data->img->mlx_img)
+		mlx_destroy_image(data->mlx_ptr, data->img->mlx_img);
+	if (data->win_ptr)
+		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+	if (data->mlx_ptr)
+	{
+		mlx_destroy_display(data->mlx_ptr);
+		free(data->mlx_ptr);
+		data->mlx_ptr = 0;
+	}
+	free_file_cont(data);
+	free(data->img);
+	free(data);
+	exit(0);
+}
+
 int	encode_rgb(int red, int green, int blue)
 {
 	return (red << 16 | green << 8 | blue);
@@ -443,6 +470,8 @@ int	handle_keypress(int key, t_data *data)
 		data->moves.r_left = true;
 	if (key == XK_Right)
 		data->moves.r_right = true;
+	if (key == XK_Escape)
+		free_game(data);
 	return (0);
 }
 
@@ -478,6 +507,7 @@ void	start_game(t_data *data)
 	load_textures(data);
 	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, &handle_keypress, data);
 	mlx_hook(data->win_ptr, KeyRelease, KeyReleaseMask, &handle_keyRelease, data);
+	mlx_hook(data->win_ptr, 17, 1L << 17, free_game, data);
 	mlx_loop_hook(data->mlx_ptr, &raycast, data);
 	mlx_loop(data->mlx_ptr);
 }

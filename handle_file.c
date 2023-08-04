@@ -12,6 +12,32 @@
 
 #include "cub3d.h"
 
+void	free_int_arr(int **info)
+{
+	int	i;
+
+	i = 0;
+	while (info[i])
+	{
+		free(info[i]);
+		i++;
+	}
+	free(info);
+}
+
+void	free_char_arr(char **info)
+{
+	int	i;
+
+	i = 0;
+	while (info[i])
+	{
+		free(info[i]);
+		i++;
+	}
+	free(info);
+}
+
 /*
  * id 0 is N texture
  * id 1 is S texture
@@ -20,15 +46,21 @@
  */
 int	save_path_to_struct(char *str, int id, t_data *data)
 {
+	char	*temp[2];
 	char	**info;
 	int		len;
 
 	info = ft_split(str, ' ');
 	len = ft_strlen(info[1]);
-	info[1] = ft_strtrim(info[1], "\n\r");
-	info[0] = ft_strtrim(info[0], "\n\r");
+	temp[1] = ft_strtrim(info[1], "\n\r");
+	temp[0] = ft_strtrim(info[0], "\n\r");
+	free(info[0]);
+	free(info[1]);
+	info[0] = temp[0];
+	info[1] = temp[1];
 	if (info[2])
 	{
+		free_char_arr(info);
 		write(2, "Error: Invalid format for texture path\n", 39);
 		write(2, "\tCorrect format is <NO/SO/WE/EA> <texture_path>\n", 48);
 		return (0);
@@ -38,10 +70,12 @@ int	save_path_to_struct(char *str, int id, t_data *data)
 		write(2, "File: ", 6);
 		write(2, info[1], ft_strlen(info[1]));
 		write(2, "\n", 1);
+		free_char_arr(info);
 		return (0);
 	}
 	data->file_cont->textures_path[id] = ft_calloc(len + 1, sizeof(char));
 	ft_strlcpy(data->file_cont->textures_path[id], info[1], len);
+	free_char_arr(info);
 	return (1);
 }
 
@@ -51,14 +85,20 @@ int	save_path_to_struct(char *str, int id, t_data *data)
  */
 int	save_rgb_to_struct(char *str, int id, t_data *data)
 {
+	char	*temp[2];
 	char	**info;
 	char	**rgb;
 
 	info = ft_split(str, ' ');
-	info[1] = ft_strtrim(info[1], "\n\r");
-	info[0] = ft_strtrim(info[1], "\n\r");
+	temp[1] = ft_strtrim(info[1], "\n\r");
+	temp[0] = ft_strtrim(info[0], "\n\r");
+	free(info[0]);
+	free(info[1]);
+	info[0] = temp[0];
+	info[1] = temp[1];
 	if (info[2])
 	{
+		free_char_arr(info);
 		write(2, "Error: Invalid format for RGB\n", 30);
 		write(2, "\tCorrect format is <F/C> <R,G,B>\n", 33);
 		return (0);
@@ -66,6 +106,8 @@ int	save_rgb_to_struct(char *str, int id, t_data *data)
 	rgb = ft_split(info[1], ',');
 	if (!rgb[0] || !rgb[1] || !rgb[2])
 	{
+		free_char_arr(info);
+		free_char_arr(rgb);
 		write(2, "Error: Missing RGB value[s]\n", 28);
 		return (0);
 	}
@@ -73,6 +115,8 @@ int	save_rgb_to_struct(char *str, int id, t_data *data)
 	(ft_atoi(rgb[1]) >= 0 && ft_atoi(rgb[1]) <= 255) || \
 	(ft_atoi(rgb[2]) >= 0 && ft_atoi(rgb[2]) <= 255)))
 	{
+		free_char_arr(info);
+		free_char_arr(rgb);
 		write(2, "Error: RGB values out of range\n", 31);
 		return (0);
 	}
@@ -80,6 +124,8 @@ int	save_rgb_to_struct(char *str, int id, t_data *data)
 	data->file_cont->colors[id][0] = ft_atoi(rgb[0]);
 	data->file_cont->colors[id][1] = ft_atoi(rgb[1]);
 	data->file_cont->colors[id][2] = ft_atoi(rgb[2]);
+	free_char_arr(info);
+	free_char_arr(rgb);
 	return (1);
 }
 

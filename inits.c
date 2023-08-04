@@ -12,12 +12,4 @@
 
 #include "cub3d.h"
 
-t_map	initiliaze_map(void)
-{
-	t_map	map;
 
-	map.player = 0;
-	map.map_size.x = 0;
-	map.map_size.y = 0;
-	return (map);
-}

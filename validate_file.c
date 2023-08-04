@@ -84,6 +84,7 @@ bool	valid_cub_file(char *file_path, t_data *data)
 	map = check_for_data(data->file_cont->txt, data);
 	if (valid_map(map) == false || valid_player(data, map) == false)
 		return (false);
+	free_char_arr(map);
 	return (true);
 }
 

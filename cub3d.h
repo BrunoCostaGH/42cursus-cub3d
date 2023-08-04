@@ -75,7 +75,6 @@ typedef struct s_file
 typedef struct s_player
 {
 	t_point			init_pos;
-	t_vector		init_dir_vec;
 	char			init_dir;
 }	t_player;
 
@@ -87,8 +86,6 @@ typedef struct	s_ray
 	double			dir_y;
 	double			plane_x;
 	double			plane_y;
-	double			time;
-	double			oldTime;
 	double			cameraX;
 	double 			ray_dir_x;
 	double 			ray_dir_y;
@@ -160,5 +157,7 @@ char	**get_map(int beg_map, char **txt);
 
 void	start_game(t_data *data);
 void	parse_textures(t_data *data);
+void	free_char_arr(char **info);
+void	free_int_arr(int **info);
 
 #endif

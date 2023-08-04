@@ -35,22 +35,22 @@ bool	is_valid_char(char c, bool for_player)
 int	get_init_player_pos(t_data *data, char **map, int y)
 {
 	int	x;
+	int n_player_spawn;
 
+	n_player_spawn = 0;
 	while (map[y])
 	{
 		x = -1;
 		while (map[y][++x])
 		{
-			if (is_valid_char(map[y][x], true) && (!data->player.init_dir && \
-			!data->player.init_pos.x && !data->player.init_pos.y))
+			if (is_valid_char(map[y][x], true) && n_player_spawn == 0)
 			{
 				data->player.init_pos.x = x;
 				data->player.init_pos.y = y;
 				data->player.init_dir = map[y][x];
+				n_player_spawn++;
 			}
-			else if (is_valid_char(map[y][x], true) && \
-			(data->player.init_dir != map[y][x] || data->player.init_pos.x != x \
-			|| data->player.init_pos.y != y))
+			else if (is_valid_char(map[y][x], true) && n_player_spawn >= 1)
 			{
 				write(2, "Error: Detected multiple player spawn points\n", 45);
 				return (1);
