@@ -121,6 +121,6 @@ int	main(int ac, char **av)
 	}
 	//generate_texture_data(data);
 	//parse_textures(data);
-	print_struct(data);
+	//print_struct(data);
 	start_game(data);
 }

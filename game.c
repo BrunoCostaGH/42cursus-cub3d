@@ -446,6 +446,7 @@ int	raycast(void *v_data)
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img->mlx_img, 0, 0);
 	handle_movement(data);
+	init_minimap(data);
 	return (0);
 }
 
@@ -520,6 +521,5 @@ void	start_game(t_data *data)
 	mlx_hook(data->win_ptr, KeyRelease, KeyReleaseMask, &handle_keyRelease, data);
 	mlx_hook(data->win_ptr, 17, 1L << 17, free_game, data);
 	mlx_loop_hook(data->mlx_ptr, &raycast, data);
-	init_minimap(data);
 	mlx_loop(data->mlx_ptr);
 }
