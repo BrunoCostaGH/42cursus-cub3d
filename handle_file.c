@@ -23,6 +23,7 @@ void	free_int_arr(int **info)
 		i++;
 	}
 	free(info);
+	info = 0;
 }
 
 void	free_char_arr(char **info)
@@ -36,6 +37,7 @@ void	free_char_arr(char **info)
 		i++;
 	}
 	free(info);
+	info = 0;
 }
 
 /*
@@ -170,7 +172,6 @@ int	find_identifiers(char **str, t_data *data)
 {
 	int	i;
 	int	beg_map;
-	int	end_map;
 
 	i = 0;
 	beg_map = -1;
@@ -181,8 +182,6 @@ int	find_identifiers(char **str, t_data *data)
 			beg_map = i;
 		i++;
 	}
-	end_map = i - 1;
-	data->file_cont->map_arr = ft_calloc(end_map - beg_map + 1, sizeof(char *));
 	return (beg_map);
 }
 

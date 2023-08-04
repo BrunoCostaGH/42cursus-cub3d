@@ -16,22 +16,33 @@ void	free_file_cont(t_data *data)
 {
 	free_char_arr(data->file_cont->map_arr);
 	free_char_arr(data->file_cont->txt);
-	free_char_arr(data->file_cont->textures);
+	free_char_arr(data->file_cont->textures_path);
 	free_int_arr(data->file_cont->colors);
 	free(data->file_cont);
 }
 
 int	free_game(t_data *data)
 {
+	int i;
+
 	if (data->img->mlx_img)
 		mlx_destroy_image(data->mlx_ptr, data->img->mlx_img);
 	if (data->win_ptr)
 		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+	if (data->tex_img)
+	{
+		i = 0;
+		while (data->tex_img[i])
+		{
+			mlx_destroy_image(data->mlx_ptr, data->tex_img[i]->mlx_img);
+			free(data->tex_img[i++]);
+		}
+		free(data->tex_img);
+	}
 	if (data->mlx_ptr)
 	{
 		mlx_destroy_display(data->mlx_ptr);
 		free(data->mlx_ptr);
-		data->mlx_ptr = 0;
 	}
 	free_file_cont(data);
 	free(data->img);
@@ -486,7 +497,7 @@ void	load_textures(t_data *data)
 	while (i < 4)
 	{
 		//k = 0;
-		data->tex_img[i]->mlx_img = mlx_new_image(data->mlx_ptr, size, size);
+		//data->tex_img[i]->mlx_img = mlx_new_image(data->mlx_ptr, size, size);
 		data->tex_img[i]->mlx_img = mlx_xpm_file_to_image(data->mlx_ptr, data->file_cont->textures_path[i], &size, &size);
 		data->tex_img[i]->addr = mlx_get_data_addr(data->tex_img[i]->mlx_img, &data->tex_img[i]->bits_per_pixel, &data->tex_img[i]->line_length, &data->tex_img[i]->endian);
 		//mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[i]->mlx_img, 0, size * i);

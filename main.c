@@ -88,13 +88,14 @@ t_data	*generate_data(void)
 	data->file_cont = malloc(sizeof(t_file));
 	data->img = malloc((sizeof(t_img)));
 	data->img->mlx_img = 0;
-	data->tex_img = malloc(sizeof(t_img *) * 4);
+	data->tex_img = ft_calloc(4 + 1, sizeof(t_img *));
 	while (i < 4)
 	{
 		data->tex_img[i] = malloc(sizeof(t_img));
 		data->tex_img[i]->mlx_img = 0;
 		i++;
 	}
+	data->file_cont->map_arr = 0;
 	data->file_cont->textures_path = ft_calloc(4 + 1, sizeof(char *));
 	data->file_cont->colors = ft_calloc(3 + 1, sizeof(int *));
 	return (data);
