@@ -126,7 +126,7 @@ void	draw_ceiling(t_data *data)
 	x = 0;
 	while (x <= data->window.x)
 	{
-		draw_vert_line(data->img, x, 0, data->window.y / 2, encode_rgb(red, green, blue));
+		draw_vert_line(data->img, x, 0, data->draw_mid_point, encode_rgb(red, green, blue));
 		x++;
 	}
 }
@@ -144,7 +144,7 @@ void	draw_floor(t_data *data)
 	x = 0;
 	while (x <= data->window.x)
 	{
-		draw_vert_line(data->img, x, data->window.y / 2, data->window.y, encode_rgb(red, green, blue));
+		draw_vert_line(data->img, x, data->draw_mid_point, data->window.y, encode_rgb(red, green, blue));
 		x++;
 	}
 }
@@ -155,13 +155,15 @@ int	handle_movement(t_data *data)
 	double			oldPlaneX;
 	double			oldDirX;
 	double			moveSpeed;
-	double			rotSpeed;
+	double			rotSpeed_x;
+	double			rotSpeed_y;
 	int				x;
 	int 			y;
 
 	info = (t_data *)data;
 	moveSpeed = 0.1;
-	rotSpeed = 0.1 * (data->diff / 10);
+	rotSpeed_x = 0.1 * (data->diff_x / 10);
+	rotSpeed_y = 10 * data->diff_y;
 	if (data->moves.forward == true)
 	{
 		x = (int)(info->ray.pos_x + info->ray.dir_x * moveSpeed);
@@ -209,20 +211,30 @@ int	handle_movement(t_data *data)
 	if (data->moves.r_left == true)
 	{
 		oldDirX = info->ray.dir_x;
-		info->ray.dir_x = info->ray.dir_x * cos(-rotSpeed) - info->ray.dir_y * sin(-rotSpeed);
-		info->ray.dir_y = oldDirX * sin(-rotSpeed) + info->ray.dir_y * cos(-rotSpeed);
+		info->ray.dir_x = info->ray.dir_x * cos(-rotSpeed_x) - info->ray.dir_y * sin(-rotSpeed_x);
+		info->ray.dir_y = oldDirX * sin(-rotSpeed_x) + info->ray.dir_y * cos(-rotSpeed_x);
 		oldPlaneX = info->ray.plane_x;
-		info->ray.plane_x = info->ray.plane_x * cos(-rotSpeed) - info->ray.plane_y * sin(-rotSpeed);
-		info->ray.plane_y = oldPlaneX * sin(-rotSpeed) + info->ray.plane_y * cos(-rotSpeed);
+		info->ray.plane_x = info->ray.plane_x * cos(-rotSpeed_x) - info->ray.plane_y * sin(-rotSpeed_x);
+		info->ray.plane_y = oldPlaneX * sin(-rotSpeed_x) + info->ray.plane_y * cos(-rotSpeed_x);
 	}
 	if (data->moves.r_right == true)
 	{
 		oldDirX = info->ray.dir_x;
-		info->ray.dir_x = info->ray.dir_x * cos(rotSpeed) - info->ray.dir_y * sin(rotSpeed);
-		info->ray.dir_y = oldDirX * sin(rotSpeed) + info->ray.dir_y * cos(rotSpeed);
+		info->ray.dir_x = info->ray.dir_x * cos(rotSpeed_x) - info->ray.dir_y * sin(rotSpeed_x);
+		info->ray.dir_y = oldDirX * sin(rotSpeed_x) + info->ray.dir_y * cos(rotSpeed_x);
 		oldPlaneX = info->ray.plane_x;
-		info->ray.plane_x = info->ray.plane_x * cos(rotSpeed) - info->ray.plane_y * sin(rotSpeed);
-		info->ray.plane_y = oldPlaneX * sin(rotSpeed) + info->ray.plane_y * cos(rotSpeed);
+		info->ray.plane_x = info->ray.plane_x * cos(rotSpeed_x) - info->ray.plane_y * sin(rotSpeed_x);
+		info->ray.plane_y = oldPlaneX * sin(rotSpeed_x) + info->ray.plane_y * cos(rotSpeed_x);
+	}
+	if (data->moves.l_up == true)
+	{
+		if ((data->draw_mid_point + rotSpeed_y) < data->window.y && (data->draw_mid_point + rotSpeed_y) > 0)
+			data->draw_mid_point += rotSpeed_y;
+	}
+	if (data->moves.l_down == true)
+	{
+		if ((data->draw_mid_point - rotSpeed_y) < data->window.y && (data->draw_mid_point - rotSpeed_y) > 0)
+			data->draw_mid_point -= rotSpeed_y;
 	}
 	return (0);
 }
@@ -250,7 +262,7 @@ void	apply_texture(t_data *data, int x, int id)
 	texX = (int) (wallX * (double)64);
 	texX = 64 - texX - 1;
 	step = 1.0 * 64 / data->ray.line_height;
-	texPos = (data->ray.draw_start - data->window.y / 2 + data->ray.line_height / 2) * step;
+	texPos = (data->ray.draw_start - data->draw_mid_point + data->ray.line_height / 2) * step;
 	y = data->ray.draw_start;
 	while (y < data->ray.draw_end && y < data->window.y)
 	{
@@ -317,18 +329,34 @@ int	handle_mouse(t_data *data)
 	if (data->mouse.x > data->oldMouse.x)
 	{
 		data->moves.r_right = true;
-		data->diff = data->mouse.x - data->oldMouse.x;
+		data->diff_x = data->mouse.x - data->oldMouse.x;
 	}
 	if (data->mouse.x < data->oldMouse.x)
 	{
 		data->moves.r_left = true;
-		data->diff = data->oldMouse.x - data->mouse.x;
+		data->diff_x = data->oldMouse.x - data->mouse.x;
 	}
 	if (data->mouse.x == data->oldMouse.x)
 	{
 		data->moves.r_right = false;
 		data->moves.r_left = false;
 	}
+	if (data->mouse.y > data->oldMouse.y)
+	{
+		data->moves.l_down = true;
+		data->diff_y = data->mouse.y - data->oldMouse.y;
+	}
+	if (data->mouse.y < data->oldMouse.y)
+	{
+		data->moves.l_up = true;
+		data->diff_y = data->oldMouse.y - data->mouse.y;
+	}
+	if (data->mouse.y == data->oldMouse.y)
+	{
+		data->moves.l_up = false;
+		data->moves.l_down = false;
+	}
+	//mlx_mouse_move(data->mlx_ptr, data->win_ptr, data->window.x / 2, data->window.y / 2);
 	return (0);
 }
 
@@ -388,6 +416,7 @@ int	raycast(void *v_data)
 	{
 		data->ray.pos_x = data->player.init_pos.x + 0.5;
 		data->ray.pos_y = data->player.init_pos.y + 0.5;
+		data->draw_mid_point = data->window.y / 2;
 		get_dir_vector(data);
 		i = 1;
 	}
@@ -396,6 +425,7 @@ int	raycast(void *v_data)
 		mlx_destroy_image(data->mlx_ptr, data->img->mlx_img);
 		data->img->mlx_img = 0;
 	}
+	mlx_mouse_move(data->mlx_ptr, data->win_ptr, data->window.x / 2, data->window.y / 2);
 	mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, &data->oldMouse.x, &data->oldMouse.y);
 	data->img->mlx_img = mlx_new_image(data->mlx_ptr, data->window.x, data->window.y);
 	data->img->addr = mlx_get_data_addr(data->img->mlx_img, &data->img->bits_per_pixel, &data->img->line_length, &data->img->endian);
@@ -456,10 +486,10 @@ int	raycast(void *v_data)
 		else
 			data->ray.perp_wall_dist = data->ray.side_dist_Y - data->ray.delta_dist_y;
 		data->ray.line_height = (int) (data->window.y / data->ray.perp_wall_dist);
-		data->ray.draw_start = -data->ray.line_height / 2 + data->window.y / 2;
+		data->ray.draw_start = -data->ray.line_height / 2 + data->draw_mid_point;
 		if (data->ray.draw_start < 0)
 			data->ray.draw_start = 0;
-		data->ray.draw_end = data->ray.line_height / 2 + data->window.y / 2;
+		data->ray.draw_end = data->ray.line_height / 2 + data->draw_mid_point;
 		if (data->ray.draw_end >= data->window.y)
 			data->ray.draw_end = data->window.x - 1;
 		if (data->ray.side == 0)
@@ -469,8 +499,8 @@ int	raycast(void *v_data)
 		//draw_vert_line(data, x, data->ray.draw_start, data->ray.draw_end, data->ray.color);
 		x++;
 	}
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img->mlx_img, 0, 0);
 	handle_mouse(data);
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img->mlx_img, 0, 0);
 	handle_movement(data);
 	return (0);
 }
