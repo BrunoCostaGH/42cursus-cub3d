@@ -131,6 +131,9 @@ typedef struct s_data
 	void			*win_ptr;
 	int				map_sur;
 	int				id;
+	double			diff;
+	t_point			oldMouse;
+	t_point			mouse;
 	t_point			flood_point;
 	t_point			max;
 	t_vector 		window;

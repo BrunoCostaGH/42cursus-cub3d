@@ -161,7 +161,7 @@ int	handle_movement(t_data *data)
 
 	info = (t_data *)data;
 	moveSpeed = 0.1;
-	rotSpeed = 0.1;
+	rotSpeed = 0.1 * (data->diff / 10);
 	if (data->moves.forward == true)
 	{
 		x = (int)(info->ray.pos_x + info->ray.dir_x * moveSpeed);
@@ -256,8 +256,11 @@ void	apply_texture(t_data *data, int x, int id)
 	{
 		texY = ((int) texPos & (64 - 1));
 		texPos += step;
-		color = gix(data->tex_img[id], texX, texY);
-		pix(data->img, x, y, color);
+		if (x >= 0)
+		{
+			color = gix(data->tex_img[id], texX, texY);
+			pix(data->img, x, y, color);
+		}
 		y++;
 	}
 }
@@ -268,7 +271,6 @@ void	apply_texture(t_data *data, int x, int id)
  * id 2 is W texture
  * id 3 is E texture
  */
-
 void	texture_picker(t_data *data)
 {
 	if (data->ray.ray_dir_x < 0)
@@ -308,6 +310,28 @@ void	texture_picker(t_data *data)
 		}
 	}
 }
+
+int	handle_mouse(t_data *data)
+{
+	mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, &data->mouse.x, &data->mouse.y);
+	if (data->mouse.x > data->oldMouse.x)
+	{
+		data->moves.r_right = true;
+		data->diff = data->mouse.x - data->oldMouse.x;
+	}
+	if (data->mouse.x < data->oldMouse.x)
+	{
+		data->moves.r_left = true;
+		data->diff = data->oldMouse.x - data->mouse.x;
+	}
+	if (data->mouse.x == data->oldMouse.x)
+	{
+		data->moves.r_right = false;
+		data->moves.r_left = false;
+	}
+	return (0);
+}
+
 /*
 void	texture_picker(t_data *data)
 {
@@ -372,6 +396,7 @@ int	raycast(void *v_data)
 		mlx_destroy_image(data->mlx_ptr, data->img->mlx_img);
 		data->img->mlx_img = 0;
 	}
+	mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, &data->oldMouse.x, &data->oldMouse.y);
 	data->img->mlx_img = mlx_new_image(data->mlx_ptr, data->window.x, data->window.y);
 	data->img->addr = mlx_get_data_addr(data->img->mlx_img, &data->img->bits_per_pixel, &data->img->line_length, &data->img->endian);
 	draw_floor(data);
@@ -445,6 +470,7 @@ int	raycast(void *v_data)
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img->mlx_img, 0, 0);
+	handle_mouse(data);
 	handle_movement(data);
 	return (0);
 }
@@ -459,10 +485,10 @@ int handle_keyRelease(int key, t_data *data)
 		data->moves.right = false;
 	if (key == XK_a)
 		data->moves.left = false;
-	if (key == XK_Left)
+	/*if (key == XK_Left)
 		data->moves.r_left = false;
 	if (key == XK_Right)
-		data->moves.r_right = false;
+		data->moves.r_right = false;*/
 	return (0);
 }
 
@@ -477,10 +503,10 @@ int	handle_keypress(int key, t_data *data)
 		data->moves.right = true;
 	if (key == XK_a)
 		data->moves.left = true;
-	if (key == XK_Left)
+	/*if (key == XK_Left)
 		data->moves.r_left = true;
 	if (key == XK_Right)
-		data->moves.r_right = true;
+		data->moves.r_right = true;*/
 	if (key == XK_Escape)
 		free_game(data);
 	return (0);
@@ -490,22 +516,13 @@ void	load_textures(t_data *data)
 {
 	int i;
 	int size;
-	//int k;
 
 	i = 0;
 	size = 64;
 	while (i < 4)
 	{
-		//k = 0;
-		//data->tex_img[i]->mlx_img = mlx_new_image(data->mlx_ptr, size, size);
 		data->tex_img[i]->mlx_img = mlx_xpm_file_to_image(data->mlx_ptr, data->file_cont->textures_path[i], &size, &size);
 		data->tex_img[i]->addr = mlx_get_data_addr(data->tex_img[i]->mlx_img, &data->tex_img[i]->bits_per_pixel, &data->tex_img[i]->line_length, &data->tex_img[i]->endian);
-		//mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->tex_img[i]->mlx_img, 0, size * i);
-		/*while (k <= 64)
-		{
-			draw_vert_line(data->tex_img[i],k, 0, 64, encode_rgb(255, 0, 0));
-			k++;
-		}*/
 		i++;
 	}
 }
@@ -516,6 +533,7 @@ void	start_game(t_data *data)
 	data->win_ptr = mlx_new_window(data->mlx_ptr, data->window.x, data->window \
 	.y, "cub3d");
 	load_textures(data);
+	mlx_mouse_hide(data->mlx_ptr, data->win_ptr);
 	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, &handle_keypress, data);
 	mlx_hook(data->win_ptr, KeyRelease, KeyReleaseMask, &handle_keyRelease, data);
 	mlx_hook(data->win_ptr, 17, 1L << 17, free_game, data);
