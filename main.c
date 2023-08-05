@@ -90,6 +90,8 @@ t_data	*generate_data(void)
 	data->file_cont = malloc(sizeof(t_file));
 	data->img = malloc((sizeof(t_img)));
 	data->img->mlx_img = 0;
+	data->mini = malloc(sizeof(t_img));
+	data->mini->mlx_img = 0;
 	data->tex_img = ft_calloc(4 + 1, sizeof(t_img *));
 	while (i < 4)
 	{

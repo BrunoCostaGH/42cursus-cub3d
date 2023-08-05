@@ -139,6 +139,7 @@ typedef struct s_data
 	t_file			*file_cont;
 	t_img			*img;
 	t_img			**tex_img;
+	t_img			*mini;
 	t_map			map;
 	t_ray			ray;
 	t_moves			moves;
@@ -163,5 +164,6 @@ void	parse_textures(t_data *data);
 void	free_char_arr(char **info);
 void	free_int_arr(int **info);
 void	pix(t_img *img, int x, int y, int color);
+void	draw_vert_line(t_img *img, int x, int draw_start, int draw_end, int color);
 
 #endif
