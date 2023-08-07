@@ -111,12 +111,8 @@ void	init_minimap(t_data *data)
 	t_point player;
 	t_point hp;
 
-
 	if (data->mini->mlx_img)
-	{
-		mlx_destroy_image(data->mlx_ptr, data->mini->mlx_img);
-		data->mini->mlx_img = 0;
-	}
+		data->prev_mini->mlx_img = data->mini->mlx_img;
 	size = 10;
 	color[0] = encode_rgb(255, 255, 255);
 	color[1] = encode_rgb(255, 0, 0);
@@ -146,7 +142,11 @@ void	init_minimap(t_data *data)
 		}
 		y++;
 	}
-
-	draw_square_player(data, ((data->ray.pos_y) * multiplier) - 3, ((data->ray.pos_x ) * multiplier)- 3, color[1]);
+	draw_square_player(data, ((data->ray.pos_y) * multiplier) - 3, ((data->ray.pos_x ) * multiplier) - 3, color[1]);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->mini->mlx_img, 0, 0);
+	if (data->prev_mini->mlx_img)
+	{
+		mlx_destroy_image(data->mlx_ptr, data->prev_mini->mlx_img);
+		data->prev_mini->mlx_img = 0;
+	}
 }

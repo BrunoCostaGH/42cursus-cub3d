@@ -39,13 +39,19 @@ int	free_game(t_data *data)
 		}
 		free(data->tex_img);
 	}
+	if (data->mini->mlx_img)
+		mlx_destroy_image(data->mlx_ptr, data->mini->mlx_img);
+	free(data->mini);
+	if (data->prev_mini->mlx_img)
+		mlx_destroy_image(data->mlx_ptr, data->prev_mini->mlx_img);
+	free(data->prev_mini);
+	free(data->img);
 	if (data->mlx_ptr)
 	{
 		mlx_destroy_display(data->mlx_ptr);
 		free(data->mlx_ptr);
 	}
 	free_file_cont(data);
-	free(data->img);
 	free(data);
 	exit(0);
 }
