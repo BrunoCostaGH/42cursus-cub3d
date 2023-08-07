@@ -17,6 +17,8 @@ void	print_struct(t_data *data)
 	int	i;
 	int	k;
 
+	printf("map_size.x: %d\nmap_size.y: %d\n", data->file_cont->map_size.x, \
+	data->file_cont->map_size.y);
 	i = 0;
 	while (data->file_cont->textures_path[i])
 		printf("%s\n", data->file_cont->textures_path[i++]);
@@ -88,6 +90,10 @@ t_data	*generate_data(void)
 	data->file_cont = malloc(sizeof(t_file));
 	data->img = malloc((sizeof(t_img)));
 	data->img->mlx_img = 0;
+	data->mini = malloc(sizeof(t_img));
+	data->mini->mlx_img = 0;
+	data->prev_mini = malloc(sizeof(t_img));
+	data->prev_mini->mlx_img = 0;
 	data->tex_img = ft_calloc(4 + 1, sizeof(t_img *));
 	while (i < 4)
 	{
@@ -96,6 +102,8 @@ t_data	*generate_data(void)
 		i++;
 	}
 	data->file_cont->map_arr = 0;
+	data->file_cont->map_size.x = 0;
+	data->file_cont->map_size.y = 0;
 	data->file_cont->textures_path = ft_calloc(4 + 1, sizeof(char *));
 	data->file_cont->colors = ft_calloc(3 + 1, sizeof(int *));
 	return (data);
@@ -117,6 +125,6 @@ int	main(int ac, char **av)
 	}
 	//generate_texture_data(data);
 	//parse_textures(data);
+	//print_struct(data);
 	start_game(data);
-	print_struct(data);
 }

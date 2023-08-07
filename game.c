@@ -74,7 +74,7 @@ void	draw_vert_line(t_img *img, int x, int draw_start, int draw_end, int color)
 	int	i;
 
 	i = draw_start;
-	while(i <= draw_end)
+	while(i <= draw_end && x >= 0 && i >= 0)
 	{
 		pix(img, x, i, color);
 		i++;
@@ -256,7 +256,7 @@ void	apply_texture(t_data *data, int x, int id)
 	{
 		texY = ((int) texPos & (64 - 1));
 		texPos += step;
-		if (x >= 0 && texX >= 0)
+		if (x >= 0 && y >= 0 && texX >= 0 && texY >= 0)
 		{
 			color = gix(data->tex_img[id], texX, texY);
 			pix(data->img, x, y, color);
