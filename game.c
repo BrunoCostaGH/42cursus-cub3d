@@ -311,50 +311,6 @@ void	texture_picker(t_data *data)
 		}
 	}
 }
-/*
-void	texture_picker(t_data *data)
-{
-	//Left side
-	if (data->ray.ray_dir_x < 0 && data->ray.ray_dir_y < 0 && data->ray.side == 1)
-		data->id = 0;
-	else if (data->ray.ray_dir_x < 0 && data->ray.ray_dir_y > 0 && data->ray.side == 1)
-		data->id = 1;
-	else if (data->ray.ray_dir_x < 0 && data->ray.side == 0)
-	{
-		data->id = 2;
-		return ;
-	}
-	//Right side
-	if (data->ray.ray_dir_x > 0 && data->ray.ray_dir_y > 0 && data->ray.side == 1)
-		data->id = 0;
-	else if (data->ray.ray_dir_x > 0 && data->ray.ray_dir_y < 0 && data->ray.side == 1)
-		data->id = 1;
-	else if (data->ray.ray_dir_x > 0 && data->ray.side == 0)
-	{
-		data->id = 3;
-		return ;
-	}
-	//North side
-	if (data->ray.ray_dir_y < 0 && data->ray.ray_dir_x > 0 && data->ray.side == 0)
-		data->id = 2;
-	else if (data->ray.ray_dir_y < 0 && data->ray.ray_dir_x < 0 && data->ray.side == 0)
-		data->id = 3;
-	else if (data->ray.ray_dir_y < 0 && data->ray.side == 1)
-	{
-		data->id = 1;
-		return ;
-	}
-	//South side
-	if (data->ray.ray_dir_y > 0 && data->ray.ray_dir_x > 0 && data->ray.side == 0)
-		data->id = 2;
-	else if (data->ray.ray_dir_y > 0 && data->ray.ray_dir_x < 0 && data->ray.side == 0)
-		data->id = 3;
-	else if (data->ray.ray_dir_y > 0 && data->ray.side == 1)
-	{
-		data->id = 0;
-		return ;
-	}
-}*/
 
 int	raycast(void *v_data)
 {
@@ -440,11 +396,22 @@ int	raycast(void *v_data)
 		data->ray.draw_end = data->ray.line_height / 2 + data->window.y / 2;
 		if (data->ray.draw_end >= data->window.y)
 			data->ray.draw_end = data->window.x - 1;
-		if (data->ray.side == 0)
-			data->ray.color = encode_rgb(255 / 2, 0, 0);
+		if (x == 0)
+		{
+			data->min_fov.x = data->ray.pos_x + data->ray.perp_wall_dist * data->ray.ray_dir_x;
+			data->min_fov_dec.x = data->min_fov.x - data->ray.mapX;
+			data->min_fov.y = data->ray.pos_y + data->ray.perp_wall_dist * data->ray.ray_dir_y;
+			data->min_fov_dec.y = data->min_fov.y - data->ray.mapY;
+		}
+		else if (x == data->window.x - 1)
+		{
+			data->max_fov.x = data->ray.pos_x + data->ray.perp_wall_dist * data->ray.ray_dir_x;
+			data->max_fov_dec.x = data->max_fov.x - data->ray.mapX;
+			data->max_fov.y = data->ray.pos_y + data->ray.perp_wall_dist * data->ray.ray_dir_y;
+			data->max_fov_dec.y = data->max_fov.y - data->ray.mapY;
+		}
 		texture_picker(data);
 		apply_texture(data, x, data->id);
-		//draw_vert_line(data, x, data->ray.draw_start, data->ray.draw_end, data->ray.color);
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img->mlx_img, 0, 0);

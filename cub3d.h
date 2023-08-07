@@ -134,6 +134,10 @@ typedef struct s_data
 	int				id;
 	t_point			flood_point;
 	t_point			max;
+	t_point 		max_fov;
+	t_point 		min_fov;
+	t_vector		max_fov_dec;
+	t_vector		min_fov_dec;
 	t_vector 		window;
 	t_player		player;
 	t_file			*file_cont;
