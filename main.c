@@ -83,8 +83,11 @@ t_data	*generate_data(void)
 	data->moves.back = false;
 	data->moves.r_right = false;
 	data->moves.r_left = false;
+	data->moves.r_right_mouse = false;
+	data->moves.r_left_mouse = false;
 	data->moves.l_up = false;
 	data->moves.l_down = false;
+	data->moves.ctrl = false;
 	data->window.x = 1280;
 	data->window.y = 1024;
 	data->file_cont = malloc(sizeof(t_file));

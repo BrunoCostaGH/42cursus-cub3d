@@ -208,7 +208,7 @@ int	handle_movement(t_data *data)
 		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_y += info->ray.plane_y * moveSpeed;
 	}
-	if (data->moves.r_left == true)
+	if (data->moves.r_left == true || data->moves.r_left_mouse == true)
 	{
 		oldDirX = info->ray.dir_x;
 		info->ray.dir_x = info->ray.dir_x * cos(-rotSpeed_x) - info->ray.dir_y * sin(-rotSpeed_x);
@@ -217,7 +217,7 @@ int	handle_movement(t_data *data)
 		info->ray.plane_x = info->ray.plane_x * cos(-rotSpeed_x) - info->ray.plane_y * sin(-rotSpeed_x);
 		info->ray.plane_y = oldPlaneX * sin(-rotSpeed_x) + info->ray.plane_y * cos(-rotSpeed_x);
 	}
-	if (data->moves.r_right == true)
+	if (data->moves.r_right == true || data->moves.r_right_mouse == true)
 	{
 		oldDirX = info->ray.dir_x;
 		info->ray.dir_x = info->ray.dir_x * cos(rotSpeed_x) - info->ray.dir_y * sin(rotSpeed_x);
@@ -326,27 +326,27 @@ void	texture_picker(t_data *data)
 int	handle_mouse(t_data *data)
 {
 	mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, &data->mouse.x, &data->mouse.y);
-	if (data->mouse.x > data->oldMouse.x)
+	if (!data->moves.ctrl && data->mouse.x > data->oldMouse.x)
 	{
-		data->moves.r_right = true;
+		data->moves.r_right_mouse = true;
 		data->diff_x = data->mouse.x - data->oldMouse.x;
 	}
-	if (data->mouse.x < data->oldMouse.x)
+	if (!data->moves.ctrl && data->mouse.x < data->oldMouse.x)
 	{
-		data->moves.r_left = true;
+		data->moves.r_left_mouse = true;
 		data->diff_x = data->oldMouse.x - data->mouse.x;
 	}
 	if (data->mouse.x == data->oldMouse.x)
 	{
-		data->moves.r_right = false;
-		data->moves.r_left = false;
+		data->moves.r_right_mouse = false;
+		data->moves.r_left_mouse = false;
 	}
-	if (data->mouse.y > data->oldMouse.y)
+	if (!data->moves.ctrl && data->mouse.y > data->oldMouse.y)
 	{
 		data->moves.l_down = true;
 		data->diff_y = data->mouse.y - data->oldMouse.y;
 	}
-	if (data->mouse.y < data->oldMouse.y)
+	if (!data->moves.ctrl && data->mouse.y < data->oldMouse.y)
 	{
 		data->moves.l_up = true;
 		data->diff_y = data->oldMouse.y - data->mouse.y;
@@ -359,51 +359,6 @@ int	handle_mouse(t_data *data)
 	//mlx_mouse_move(data->mlx_ptr, data->win_ptr, data->window.x / 2, data->window.y / 2);
 	return (0);
 }
-
-/*
-void	texture_picker(t_data *data)
-{
-	//Left side
-	if (data->ray.ray_dir_x < 0 && data->ray.ray_dir_y < 0 && data->ray.side == 1)
-		data->id = 0;
-	else if (data->ray.ray_dir_x < 0 && data->ray.ray_dir_y > 0 && data->ray.side == 1)
-		data->id = 1;
-	else if (data->ray.ray_dir_x < 0 && data->ray.side == 0)
-	{
-		data->id = 2;
-		return ;
-	}
-	//Right side
-	if (data->ray.ray_dir_x > 0 && data->ray.ray_dir_y > 0 && data->ray.side == 1)
-		data->id = 0;
-	else if (data->ray.ray_dir_x > 0 && data->ray.ray_dir_y < 0 && data->ray.side == 1)
-		data->id = 1;
-	else if (data->ray.ray_dir_x > 0 && data->ray.side == 0)
-	{
-		data->id = 3;
-		return ;
-	}
-	//North side
-	if (data->ray.ray_dir_y < 0 && data->ray.ray_dir_x > 0 && data->ray.side == 0)
-		data->id = 2;
-	else if (data->ray.ray_dir_y < 0 && data->ray.ray_dir_x < 0 && data->ray.side == 0)
-		data->id = 3;
-	else if (data->ray.ray_dir_y < 0 && data->ray.side == 1)
-	{
-		data->id = 1;
-		return ;
-	}
-	//South side
-	if (data->ray.ray_dir_y > 0 && data->ray.ray_dir_x > 0 && data->ray.side == 0)
-		data->id = 2;
-	else if (data->ray.ray_dir_y > 0 && data->ray.ray_dir_x < 0 && data->ray.side == 0)
-		data->id = 3;
-	else if (data->ray.ray_dir_y > 0 && data->ray.side == 1)
-	{
-		data->id = 0;
-		return ;
-	}
-}*/
 
 int	raycast(void *v_data)
 {
@@ -420,12 +375,23 @@ int	raycast(void *v_data)
 		get_dir_vector(data);
 		i = 1;
 	}
+	if (data->moves.ctrl == false)
+	{
+		mlx_mouse_hide(data->mlx_ptr, data->win_ptr);
+		mlx_mouse_move(data->mlx_ptr, data->win_ptr, data->window.x / 2, data->window.y / 2);
+		mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, &data->oldMouse.x, &data->oldMouse.y);
+	}
+	else
+		mlx_mouse_show(data->mlx_ptr, data->win_ptr);
+	handle_mouse(data);
+	handle_movement(data);
 	if (data->img->mlx_img)
 	{
 		mlx_destroy_image(data->mlx_ptr, data->img->mlx_img);
 		data->img->mlx_img = 0;
 	}
-	mlx_mouse_move(data->mlx_ptr, data->win_ptr, data->window.x / 2, data->window.y / 2);
+	if (data->moves.ctrl == false)
+		mlx_mouse_move(data->mlx_ptr, data->win_ptr, data->window.x / 2, data->window.y / 2);
 	mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, &data->oldMouse.x, &data->oldMouse.y);
 	data->img->mlx_img = mlx_new_image(data->mlx_ptr, data->window.x, data->window.y);
 	data->img->addr = mlx_get_data_addr(data->img->mlx_img, &data->img->bits_per_pixel, &data->img->line_length, &data->img->endian);
@@ -515,10 +481,12 @@ int handle_keyRelease(int key, t_data *data)
 		data->moves.right = false;
 	if (key == XK_a)
 		data->moves.left = false;
-	/*if (key == XK_Left)
+	if (key == XK_Left)
 		data->moves.r_left = false;
 	if (key == XK_Right)
-		data->moves.r_right = false;*/
+		data->moves.r_right = false;
+	if (key == XK_Control_L || key == XK_Control_R)
+		data->moves.ctrl = false;
 	return (0);
 }
 
@@ -533,10 +501,12 @@ int	handle_keypress(int key, t_data *data)
 		data->moves.right = true;
 	if (key == XK_a)
 		data->moves.left = true;
-	/*if (key == XK_Left)
+	if (key == XK_Left)
 		data->moves.r_left = true;
 	if (key == XK_Right)
-		data->moves.r_right = true;*/
+		data->moves.r_right = true;
+	if (key == XK_Control_L || key == XK_Control_R)
+		data->moves.ctrl = true;
 	if (key == XK_Escape)
 		free_game(data);
 	return (0);

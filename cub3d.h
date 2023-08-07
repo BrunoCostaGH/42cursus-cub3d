@@ -45,8 +45,11 @@ typedef struct	s_moves
 	bool	left;
 	bool	r_right;
 	bool	r_left;
+	bool	r_right_mouse;
+	bool	r_left_mouse;
 	bool	l_up;
 	bool	l_down;
+	bool	ctrl;
 }	t_moves;
 
 typedef struct s_map
