@@ -129,11 +129,11 @@ void	init_minimap(t_data *data)
 	y = 0;
 	player.x = data->ray.pos_x * multiplier;
 	player.y = data->ray.pos_y * multiplier;
-	hp.x = ((data->ray.pos_x + (data->ray.dir_x + -data->ray.plane_x)) * multiplier);
-	hp.y = ((data->ray.pos_y + (data->ray.dir_y + -data->ray.plane_y)) * multiplier);
+	hp.x = (data->min_fov_hp.x * multiplier) + (data->min_fov_dec * multiplier);
+	hp.y = (data->min_fov_hp.y * multiplier) + (data->min_fov_dec * multiplier);
 	draw_line(data, player, hp);
-	hp.x = ((data->ray.pos_x + (data->ray.dir_x + data->ray.plane_x)) * multiplier);
-	hp.y = ((data->ray.pos_y + (data->ray.dir_y + data->ray.plane_y)) * multiplier);
+	hp.x = (data->max_fov_hp.x * multiplier) + (data->max_fov_dec * multiplier);
+	hp.y = (data->max_fov_hp.y * multiplier) + (data->max_fov_dec * multiplier);
 	draw_line(data, player, hp);
 	while (data->file_cont->map_arr[y])
 	{

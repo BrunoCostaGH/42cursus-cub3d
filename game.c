@@ -256,7 +256,7 @@ void	apply_texture(t_data *data, int x, int id)
 	{
 		texY = ((int) texPos & (64 - 1));
 		texPos += step;
-		if (x >= 0)
+		if (x >= 0 && y >= 0 && texX >= 0)
 		{
 			color = gix(data->tex_img[id], texX, texY);
 			pix(data->img, x, y, color);
@@ -398,17 +398,33 @@ int	raycast(void *v_data)
 			data->ray.draw_end = data->window.x - 1;
 		if (x == 0)
 		{
-			data->min_fov.x = data->ray.pos_x + data->ray.perp_wall_dist * data->ray.ray_dir_x;
-			data->min_fov_dec.x = data->min_fov.x - data->ray.mapX;
-			data->min_fov.y = data->ray.pos_y + data->ray.perp_wall_dist * data->ray.ray_dir_y;
-			data->min_fov_dec.y = data->min_fov.y - data->ray.mapY;
+			if (data->ray.side == 0)
+			{
+				data->min_fov_dec = data->ray.pos_y + data->ray.perp_wall_dist * data->ray.ray_dir_y;
+				data->min_fov_dec -= data->ray.mapY;
+			}
+			else
+			{
+				data->min_fov_dec = data->ray.pos_x + data->ray.perp_wall_dist * data->ray.ray_dir_x;
+				data->min_fov_dec -= data->ray.mapX;
+			}
+			data->min_fov_hp.x = data->ray.mapX;
+			data->min_fov_hp.y = data->ray.mapY;
 		}
 		else if (x == data->window.x - 1)
 		{
-			data->max_fov.x = data->ray.pos_x + data->ray.perp_wall_dist * data->ray.ray_dir_x;
-			data->max_fov_dec.x = data->max_fov.x - data->ray.mapX;
-			data->max_fov.y = data->ray.pos_y + data->ray.perp_wall_dist * data->ray.ray_dir_y;
-			data->max_fov_dec.y = data->max_fov.y - data->ray.mapY;
+			if (data->ray.side == 0)
+			{
+				data->max_fov_dec = data->ray.pos_y + data->ray.perp_wall_dist * data->ray.ray_dir_y;
+				data->max_fov_dec -= data->ray.mapY;
+			}
+			else
+			{
+				data->max_fov_dec = data->ray.pos_x + data->ray.perp_wall_dist * data->ray.ray_dir_x;
+				data->max_fov_dec -= data->ray.mapX;
+			}
+			data->max_fov_hp.x = data->ray.mapX;
+			data->max_fov_hp.y = data->ray.mapY;
 		}
 		texture_picker(data);
 		apply_texture(data, x, data->id);

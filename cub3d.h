@@ -136,8 +136,10 @@ typedef struct s_data
 	t_point			max;
 	t_point 		max_fov;
 	t_point 		min_fov;
-	t_vector		max_fov_dec;
-	t_vector		min_fov_dec;
+	double 		max_fov_dec;
+	double 		min_fov_dec;
+	t_point			min_fov_hp;
+	t_point			max_fov_hp;
 	t_vector 		window;
 	t_player		player;
 	t_file			*file_cont;
