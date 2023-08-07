@@ -256,7 +256,7 @@ void	apply_texture(t_data *data, int x, int id)
 	{
 		texY = ((int) texPos & (64 - 1));
 		texPos += step;
-		if (x >= 0)
+		if (x >= 0 && texX >= 0)
 		{
 			color = gix(data->tex_img[id], texX, texY);
 			pix(data->img, x, y, color);
