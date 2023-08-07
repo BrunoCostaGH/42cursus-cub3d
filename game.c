@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:56:23 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/07/03 14:34:45 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/07 17:41:16 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	free_file_cont(t_data *data)
 
 int	free_game(t_data *data)
 {
-	int i;
+	int	i;
 
 	if (data->img->mlx_img)
 		mlx_destroy_image(data->mlx_ptr, data->img->mlx_img);
@@ -74,7 +74,7 @@ void	draw_vert_line(t_img *img, int x, int draw_start, int draw_end, int color)
 	int	i;
 
 	i = draw_start;
-	while(i <= draw_end)
+	while (i <= draw_end)
 	{
 		pix(img, x, i, color);
 		i++;
@@ -115,7 +115,7 @@ void	get_dir_vector(t_data *data)
 
 void	draw_ceiling(t_data *data)
 {
-	int x;
+	int	x;
 	int	red;
 	int	green;
 	int	blue;
@@ -133,7 +133,7 @@ void	draw_ceiling(t_data *data)
 
 void	draw_floor(t_data *data)
 {
-	int x;
+	int	x;
 	int	red;
 	int	green;
 	int	blue;
@@ -158,7 +158,7 @@ int	handle_movement(t_data *data)
 	double			rotSpeed_x;
 	double			rotSpeed_y;
 	int				x;
-	int 			y;
+	int				y;
 
 	info = (t_data *)data;
 	moveSpeed = 0.1;
@@ -171,40 +171,40 @@ int	handle_movement(t_data *data)
 		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_x += info->ray.dir_x * moveSpeed;
 		x = (int) info->ray.pos_x;
-		y = (int) (info->ray.pos_y + info->ray.dir_y * moveSpeed);
+		y = (int)(info->ray.pos_y + info->ray.dir_y * moveSpeed);
 		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_y += info->ray.dir_y * moveSpeed;
 	}
 	if (data->moves.back == true)
 	{
-		y = (int) info->ray.pos_y;
-		x = (int) (info->ray.pos_x - info->ray.dir_x * moveSpeed);
+		y = (int)info->ray.pos_y;
+		x = (int)(info->ray.pos_x - info->ray.dir_x * moveSpeed);
 		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_x -= info->ray.dir_x * moveSpeed;
-		x = (int) info->ray.pos_x;
-		y = (int) (info->ray.pos_y - info->ray.dir_y * moveSpeed);
+		x = (int)info->ray.pos_x;
+		y = (int)(info->ray.pos_y - info->ray.dir_y * moveSpeed);
 		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_y -= info->ray.dir_y * moveSpeed;
 	}
 	if (data->moves.left == true)
 	{
-		y = (int) info->ray.pos_y;
-		x = (int) (info->ray.pos_x - info->ray.plane_x * moveSpeed);
+		y = (int)info->ray.pos_y;
+		x = (int)(info->ray.pos_x - info->ray.plane_x * moveSpeed);
 		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_x -= info->ray.plane_x * moveSpeed;
-		x = (int) info->ray.pos_x;
-		y = (int) (info->ray.pos_y - info->ray.plane_y * moveSpeed);
+		x = (int)info->ray.pos_x;
+		y = (int)(info->ray.pos_y - info->ray.plane_y * moveSpeed);
 		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_y -= info->ray.plane_y * moveSpeed;
 	}
 	if (data->moves.right == true)
 	{
-		y = (int) info->ray.pos_y;
-		x = (int) (info->ray.pos_x + info->ray.plane_x * moveSpeed);
+		y = (int)info->ray.pos_y;
+		x = (int)(info->ray.pos_x + info->ray.plane_x * moveSpeed);
 		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_x += info->ray.plane_x * moveSpeed;
-		x = (int) info->ray.pos_x;
-		y = (int) (info->ray.pos_y + info->ray.plane_y * moveSpeed);
+		x = (int)info->ray.pos_x;
+		y = (int)(info->ray.pos_y + info->ray.plane_y * moveSpeed);
 		if (info->file_cont->map_arr[y][x] == '0')
 			info->ray.pos_y += info->ray.plane_y * moveSpeed;
 	}
@@ -259,7 +259,7 @@ void	apply_texture(t_data *data, int x, int id)
 		wallX = data->ray.pos_x + data->ray.perp_wall_dist * data->ray.ray_dir_x;
 		wallX -= data->ray.mapX;
 	}
-	texX = (int) (wallX * (double)64);
+	texX = (int)(wallX * (double)64);
 	texX = 64 - texX - 1;
 	step = 1.0 * 64 / data->ray.line_height;
 	texPos = (data->ray.draw_start - data->draw_mid_point + data->ray.line_height / 2) * step;
@@ -356,15 +356,14 @@ int	handle_mouse(t_data *data)
 		data->moves.l_up = false;
 		data->moves.l_down = false;
 	}
-	//mlx_mouse_move(data->mlx_ptr, data->win_ptr, data->window.x / 2, data->window.y / 2);
 	return (0);
 }
 
 int	raycast(void *v_data)
 {
-	int 			x;
-	static	int		i;
-	t_data *data;
+	int				x;
+	static int		i;
+	t_data			*data;
 
 	data = (t_data *)v_data;
 	if (i != 1)
@@ -398,7 +397,7 @@ int	raycast(void *v_data)
 	draw_floor(data);
 	draw_ceiling(data);
 	x = 0;
-	while(x < data->window.x)
+	while (x < data->window.x)
 	{
 		data->ray.color = encode_rgb(255, 0, 0);
 		data->ray.mapX = (int) data->ray.pos_x;
@@ -462,7 +461,6 @@ int	raycast(void *v_data)
 			data->ray.color = encode_rgb(255 / 2, 0, 0);
 		texture_picker(data);
 		apply_texture(data, x, data->id);
-		//draw_vert_line(data, x, data->ray.draw_start, data->ray.draw_end, data->ray.color);
 		x++;
 	}
 	handle_mouse(data);
@@ -471,7 +469,7 @@ int	raycast(void *v_data)
 	return (0);
 }
 
-int handle_keyRelease(int key, t_data *data)
+int	handle_keyRelease(int key, t_data *data)
 {
 	if (key == XK_w)
 		data->moves.forward = false;
@@ -514,8 +512,8 @@ int	handle_keypress(int key, t_data *data)
 
 void	load_textures(t_data *data)
 {
-	int i;
-	int size;
+	int	i;
+	int	size;
 
 	i = 0;
 	size = 64;
