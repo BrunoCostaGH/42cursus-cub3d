@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:56:23 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/07/03 14:34:45 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/07 16:44:09 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,8 +256,11 @@ void	apply_texture(t_data *data, int x, int id)
 	{
 		texY = ((int) texPos & (64 - 1));
 		texPos += step;
-		color = gix(data->tex_img[id], texX, texY);
-		pix(data->img, x, y, color);
+		if (x >= 0)
+		{
+			color = gix(data->tex_img[id], texX, texY);
+			pix(data->img, x, y, color);
+		}
 		y++;
 	}
 }
