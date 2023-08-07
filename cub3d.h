@@ -146,6 +146,7 @@ typedef struct s_data
 	t_img			*img;
 	t_img			**tex_img;
 	t_img			*mini;
+	t_img			*prev_mini;
 	t_map			map;
 	t_ray			ray;
 	t_moves			moves;
