@@ -39,13 +39,19 @@ int	free_game(t_data *data)
 		}
 		free(data->tex_img);
 	}
+	if (data->mini->mlx_img)
+		mlx_destroy_image(data->mlx_ptr, data->mini->mlx_img);
+	free(data->mini);
+	if (data->prev_mini->mlx_img)
+		mlx_destroy_image(data->mlx_ptr, data->prev_mini->mlx_img);
+	free(data->prev_mini);
+	free(data->img);
 	if (data->mlx_ptr)
 	{
 		mlx_destroy_display(data->mlx_ptr);
 		free(data->mlx_ptr);
 	}
 	free_file_cont(data);
-	free(data->img);
 	free(data);
 	exit(0);
 }
@@ -457,8 +463,36 @@ int	raycast(void *v_data)
 		data->ray.draw_end = data->ray.line_height / 2 + data->draw_mid_point;
 		if (data->ray.draw_end >= data->window.y)
 			data->ray.draw_end = data->window.x - 1;
-		if (data->ray.side == 0)
-			data->ray.color = encode_rgb(255 / 2, 0, 0);
+		if (x == 0)
+		{
+			if (data->ray.side == 0)
+			{
+				data->min_fov_dec = data->ray.pos_y + data->ray.perp_wall_dist * data->ray.ray_dir_y;
+				data->min_fov_dec -= data->ray.mapY;
+			}
+			else
+			{
+				data->min_fov_dec = data->ray.pos_x + data->ray.perp_wall_dist * data->ray.ray_dir_x;
+				data->min_fov_dec -= data->ray.mapX;
+			}
+			data->min_fov_hp.x = data->ray.mapX;
+			data->min_fov_hp.y = data->ray.mapY;
+		}
+		else if (x == data->window.x - 1)
+		{
+			if (data->ray.side == 0)
+			{
+				data->max_fov_dec = data->ray.pos_y + data->ray.perp_wall_dist * data->ray.ray_dir_y;
+				data->max_fov_dec -= data->ray.mapY;
+			}
+			else
+			{
+				data->max_fov_dec = data->ray.pos_x + data->ray.perp_wall_dist * data->ray.ray_dir_x;
+				data->max_fov_dec -= data->ray.mapX;
+			}
+			data->max_fov_hp.x = data->ray.mapX;
+			data->max_fov_hp.y = data->ray.mapY;
+		}
 		texture_picker(data);
 		apply_texture(data, x, data->id);
 		x++;
@@ -466,6 +500,7 @@ int	raycast(void *v_data)
 	handle_mouse(data);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img->mlx_img, 0, 0);
 	handle_movement(data);
+	init_minimap(data);
 	return (0);
 }
 
