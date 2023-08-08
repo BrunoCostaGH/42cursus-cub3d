@@ -45,6 +45,11 @@ typedef struct	s_moves
 	bool	left;
 	bool	r_right;
 	bool	r_left;
+	bool	r_right_mouse;
+	bool	r_left_mouse;
+	bool	l_up;
+	bool	l_down;
+	bool	ctrl;
 }	t_moves;
 
 typedef struct s_map
@@ -132,6 +137,11 @@ typedef struct s_data
 	void			*win_ptr;
 	int				map_sur;
 	int				id;
+	int 			diff_x;
+	int 			diff_y;
+	int				draw_mid_point;
+	t_point			oldMouse;
+	t_point			mouse;
 	t_point			flood_point;
 	t_point			max;
 	t_point 		max_fov;
