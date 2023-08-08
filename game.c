@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:56:23 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/07 17:41:16 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/07 16:44:09 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	draw_vert_line(t_img *img, int x, int draw_start, int draw_end, int color)
 	int	i;
 
 	i = draw_start;
-	while (i <= draw_end)
+	while(i <= draw_end && x >= 0 && i >= 0)
 	{
 		pix(img, x, i, color);
 		i++;
@@ -268,7 +268,7 @@ void	apply_texture(t_data *data, int x, int id)
 	{
 		texY = ((int) texPos & (64 - 1));
 		texPos += step;
-		if (x >= 0)
+		if (x >= 0 && y >= 0 && texX >= 0 && texY >= 0)
 		{
 			color = gix(data->tex_img[id], texX, texY);
 			pix(data->img, x, y, color);
