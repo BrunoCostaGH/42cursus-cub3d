@@ -131,6 +131,10 @@ int		run_compares(char *str, t_data *data);
 int		save_rgb_to_struct(char *str, int id, t_data *data);
 int		save_path_to_struct(char *str, int id, t_data *data);
 int		get_init_player_pos(t_data *data, char **map, int y);
+int		set_init_values(t_data *data);
+int		check_rgb_range(char **rgb);
+int		validate_rgb(char **info, char **rgb)
+
 
 unsigned int	gix(t_img *img, int x, int y);
 
@@ -153,10 +157,19 @@ void	free_char_arr(char **info);
 void	draw_ceiling(t_data *data);
 void	load_textures(t_data *data);
 void	texture_picker(t_data *data);
+void	initial_draws(t_data *data);
 void	init_file_cont(t_data *data);
 void	get_dir_vector(t_data *data);
 void	init_image(t_data *data, t_img *image);
 void	pix(t_img *img, int x, int y, int color);
+void	write_miss_file(char **info);
+void	write_empty_file(char *file_path);
+void	write_invalid_format_path(char **info);
+void	write_out_of_range(char **info, char **rgb);
+void	write_miss_rgb(char **info, char **rgb);
+void	write_invalid_format_rgb(char **info);
+void	copy_file_path(t_data *data, char **info, int len, int id);
+void	save_values(t_data *data, int id, char **rgb, char **info);
 void	apply_texture(t_data *data, int x, int id);
 void	move_forward(t_data *info, double move_speed);
 void	move_backwards(t_data *info, double move_speed);

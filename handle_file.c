@@ -34,22 +34,15 @@ int	save_path_to_struct(char *str, int id, t_data *data)
 	info[1] = temp[1];
 	if (info[2])
 	{
-		free_char_arr(info);
-		write(2, "Error: Invalid format for texture path\n", 39);
-		write(2, "\tCorrect format is <NO/SO/WE/EA> <texture_path>\n", 48);
+		write_invalid_format_path(info);
 		return (0);
 	}
 	if (!check_if_file_exists(info[1], 0))
 	{
-		write(2, "File: ", 6);
-		write(2, info[1], ft_strlen(info[1]));
-		write(2, "\n", 1);
-		free_char_arr(info);
+		write_miss_file(info);
 		return (0);
 	}
-	data->file_cont->textures_path[id] = ft_calloc(len + 1, sizeof(char));
-	ft_strlcpy(data->file_cont->textures_path[id], info[1], len);
-	free_char_arr(info);
+	copy_file_path(data, info, len, id);
 	return (1);
 }
 
@@ -70,36 +63,9 @@ int	save_rgb_to_struct(char *str, int id, t_data *data)
 	free(info[1]);
 	info[0] = temp[0];
 	info[1] = temp[1];
-	if (info[2])
-	{
-		free_char_arr(info);
-		write(2, "Error: Invalid format for RGB\n", 30);
-		write(2, "\tCorrect format is <F/C> <R,G,B>\n", 33);
+	if (!validate_rgb(info, rgb))
 		return (0);
-	}
-	rgb = ft_split(info[1], ',');
-	if (!rgb[0] || !rgb[1] || !rgb[2])
-	{
-		free_char_arr(info);
-		free_char_arr(rgb);
-		write(2, "Error: Missing RGB value[s]\n", 28);
-		return (0);
-	}
-	if (!((ft_atoi(rgb[0]) >= 0 && ft_atoi(rgb[0]) <= 255) || \
-	(ft_atoi(rgb[1]) >= 0 && ft_atoi(rgb[1]) <= 255) || \
-	(ft_atoi(rgb[2]) >= 0 && ft_atoi(rgb[2]) <= 255)))
-	{
-		free_char_arr(info);
-		free_char_arr(rgb);
-		write(2, "Error: RGB values out of range\n", 31);
-		return (0);
-	}
-	data->file_cont->colors[id] = ft_calloc(3 + 1, sizeof(int));
-	data->file_cont->colors[id][0] = ft_atoi(rgb[0]);
-	data->file_cont->colors[id][1] = ft_atoi(rgb[1]);
-	data->file_cont->colors[id][2] = ft_atoi(rgb[2]);
-	free_char_arr(info);
-	free_char_arr(rgb);
+	save_values(data, id, rgb, info);
 	return (1);
 }
 
@@ -117,7 +83,7 @@ char	**check_for_data(char **str, t_data *data)
 		index[1] = 0;
 		while (data->file_cont->map_arr[index[0] - 1][++index[1] - 1])
 			if (is_valid_char(data->file_cont->map_arr[index[0] - 1] \
-					[index[1] - 1],true))
+					[index[1] - 1], true))
 				data->file_cont->map_arr[index[0] - 1][index[1] - 1] = '0';
 	}
 	map_val = get_map(beg_map, str);
@@ -155,9 +121,7 @@ int	read_file(char *file_path, t_data *data)
 	count_lines(file_path);
 	if (lines <= 0)
 	{
-		write(2, "Error: ", 7);
-		write(2, file_path, ft_strlen(file_path));
-		write(2, " file is empty\n", 15);
+		write_empty_file(file_path);
 		return (0);
 	}
 	data->file_cont->txt = ft_calloc(lines + 1, sizeof(char *));
