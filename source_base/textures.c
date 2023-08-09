@@ -6,19 +6,39 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:49:34 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/08 18:49:34 by tabreia-         ###   ########.fr       */
+/*   Updated: 2023/08/09 14:58:38 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
+
+static void	apply_texture_2(t_data *data, int x, int id, t_point *tex)
+{
+	double			tex_pos;
+	double			step;
+	int				y;
+
+	step = 1.0 * 64 / data->ray.line_height;
+	tex_pos = (data->ray.draw_start - data->window.y / 2 + \
+		data->ray.line_height / 2) * step;
+	y = data->ray.draw_start;
+	while (y < data->ray.draw_end && y < data->window.y)
+	{
+		tex->y = ((int) tex_pos & (64 - 1));
+		tex_pos += step;
+		if (x >= 0 && y >= 0 && tex->x >= 0 && tex->y >= 0)
+		{
+			data->ray.color = gix(data->tex_img[id], tex->x, tex->y);
+			pix(data->img, x, y, data->ray.color);
+		}
+		y++;
+	}
+}
 
 void	apply_texture(t_data *data, int x, int id)
 {
 	double			wall_x;
-	double			step;
-	double			tex_pos;
 	t_point			tex;
-	int				y;
 
 	if (data->ray.side == 0)
 	{
@@ -34,21 +54,7 @@ void	apply_texture(t_data *data, int x, int id)
 	}
 	tex.x = (int)(wall_x * (double)64);
 	tex.x = 64 - tex.x - 1;
-	step = 1.0 * 64 / data->ray.line_height;
-	tex_pos = (data->ray.draw_start - data->window.y / 2 + \
-		data->ray.line_height / 2) * step;
-	y = data->ray.draw_start;
-	while (y < data->ray.draw_end && y < data->window.y)
-	{
-		tex.y = ((int) tex_pos & (64 - 1));
-		tex_pos += step;
-		if (x >= 0 && y >= 0 && tex.x >= 0 && tex.y >= 0)
-		{
-			data->ray.color = gix(data->tex_img[id], tex.x, tex.y);
-			pix(data->img, x, y, data->ray.color);
-		}
-		y++;
-	}
+	apply_texture_2(data, x, id, &tex);
 }
 
 /*
@@ -59,40 +65,24 @@ void	apply_texture(t_data *data, int x, int id)
  */
 void	texture_picker(t_data *data)
 {
-	if (data->ray.ray_dir_x < 0)
+	if (data->ray.ray_dir_x < 0 && data->ray.side == 0)
 	{
-		if (data->ray.side == 0)
-		{
-			data->id = 3;
-			return ;
-		}
-		if (data->ray.ray_dir_y < 0)
-		{
-			data->id = 1;
-			return ;
-		}
-		else
-		{
-			data->id = 0;
-			return ;
-		}
+		data->id = 3;
+		return ;
+	}
+	else if (data->ray.side == 0)
+	{
+		data->id = 2;
+		return ;
+	}
+	if (data->ray.ray_dir_y < 0)
+	{
+		data->id = 1;
+		return ;
 	}
 	else
 	{
-		if (data->ray.side == 0)
-		{
-			data->id = 2;
-			return ;
-		}
-		if (data->ray.ray_dir_y < 0)
-		{
-			data->id = 1;
-			return ;
-		}
-		else
-		{
-			data->id = 0;
-			return ;
-		}
+		data->id = 0;
+		return ;
 	}
 }

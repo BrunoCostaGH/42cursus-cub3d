@@ -6,13 +6,13 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:14:56 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/08 18:14:56 by tabreia-         ###   ########.fr       */
+/*   Updated: 2023/08/09 15:39:23 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
-void	calc_step(t_data *data)
+static void	calc_step(t_data *data)
 {
 	if (data->ray.ray_dir_x < 0)
 	{
@@ -40,7 +40,7 @@ void	calc_step(t_data *data)
 	}
 }
 
-void	init_calcs(t_data *data, int x)
+static void	init_calc(t_data *data, int x)
 {
 	data->ray.color = encode_rgb(255, 0, 0);
 	data->ray.map_x = (int) data->ray.pos_x;
@@ -56,7 +56,7 @@ void	init_calcs(t_data *data, int x)
 	data->ray.delta_dist_y = fabs(1 / data->ray.ray_dir_y);
 }
 
-void	calculate_drawpoints(t_data *data)
+static void	calculate_drawpoints(t_data *data)
 {
 	if (data->ray.side == 0)
 		data->ray.perp_wall_dist = data->ray.side_dist_x - \
@@ -74,7 +74,7 @@ void	calculate_drawpoints(t_data *data)
 		data->ray.draw_end = data->window.x - 1;
 }
 
-void	dda_algo(t_data *data)
+static void	dda_algo(t_data *data)
 {
 	while (data->ray.hit == 0)
 	{
@@ -95,20 +95,10 @@ void	dda_algo(t_data *data)
 	}
 }
 
-int	raycast(void *v_data)
+int	raycast(t_data *data)
 {
-	int				x;
-	static int		i;
-	t_data			*data;
+	int	x;
 
-	data = (t_data *)v_data;
-	if (i != 1)
-	{
-		data->ray.pos_x = data->player.init_pos.x + 0.5;
-		data->ray.pos_y = data->player.init_pos.y + 0.5;
-		get_dir_vector(data);
-		i = 1;
-	}
 	if (data->img->mlx_img)
 	{
 		mlx_destroy_image(data->mlx_ptr, data->img->mlx_img);
@@ -120,7 +110,7 @@ int	raycast(void *v_data)
 	x = 0;
 	while (x++ < data->window.x)
 	{
-		init_calcs(data, x);
+		init_calc(data, x);
 		calc_step(data);
 		dda_algo(data);
 		calculate_drawpoints(data);

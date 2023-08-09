@@ -6,11 +6,11 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:49:25 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/07/06 15:07:42 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/09 15:59:34 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 /*
  * id 0 is N texture
@@ -34,16 +34,13 @@ int	save_path_to_struct(char *str, int id, t_data *data)
 	info[1] = temp[1];
 	if (info[2])
 	{
-		free_char_arr(info);
 		write(2, "Error: Invalid format for texture path\n", 39);
 		write(2, "\tCorrect format is <NO/SO/WE/EA> <texture_path>\n", 48);
+		free_char_arr(info);
 		return (0);
 	}
 	if (!check_if_file_exists(info[1], 0))
 	{
-		write(2, "File: ", 6);
-		write(2, info[1], ft_strlen(info[1]));
-		write(2, "\n", 1);
 		free_char_arr(info);
 		return (0);
 	}
@@ -117,7 +114,7 @@ char	**check_for_data(char **str, t_data *data)
 		index[1] = 0;
 		while (data->file_cont->map_arr[index[0] - 1][++index[1] - 1])
 			if (is_valid_char(data->file_cont->map_arr[index[0] - 1] \
-					[index[1] - 1],true))
+			[index[1] - 1], true))
 				data->file_cont->map_arr[index[0] - 1][index[1] - 1] = '0';
 	}
 	map_val = get_map(beg_map, str);
@@ -152,12 +149,11 @@ int	read_file(char *file_path, t_data *data)
 
 	i = -1;
 	lines = count_lines(file_path);
-	count_lines(file_path);
 	if (lines <= 0)
 	{
 		write(2, "Error: ", 7);
 		write(2, file_path, ft_strlen(file_path));
-		write(2, " file is empty\n", 15);
+		write(2, ": File is empty\n", 15);
 		return (0);
 	}
 	data->file_cont->txt = ft_calloc(lines + 1, sizeof(char *));

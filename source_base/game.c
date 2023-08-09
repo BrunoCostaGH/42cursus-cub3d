@@ -6,11 +6,11 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:56:23 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/07 16:44:09 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/09 15:40:13 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 void	get_dir_vector(t_data *data)
 {
@@ -26,25 +26,23 @@ void	get_dir_vector(t_data *data)
 
 int	handle_movement(t_data *data)
 {
-	static t_data	*info;
 	double			move_speed;
 	double			rot_speed;
 
-	info = (t_data *)data;
 	move_speed = 0.1;
 	rot_speed = 0.1;
 	if (data->moves.forward == true)
-		move_forward(info, move_speed);
+		move_forward(data, move_speed);
 	if (data->moves.back == true)
-		move_backwards(info, move_speed);
+		move_backwards(data, move_speed);
 	if (data->moves.left == true)
-		move_left(info, move_speed);
+		move_left(data, move_speed);
 	if (data->moves.right == true)
-		move_right(info, move_speed);
+		move_right(data, move_speed);
 	if (data->moves.r_left == true)
-		rotate_left(info, rot_speed);
+		rotate_left(data, rot_speed);
 	if (data->moves.r_right == true)
-		rotate_right(info, rot_speed);
+		rotate_right(data, rot_speed);
 	return (0);
 }
 
@@ -53,6 +51,9 @@ void	start_game(t_data *data)
 	data->mlx_ptr = mlx_init();
 	data->win_ptr = mlx_new_window(data->mlx_ptr, data->window.x, data->window \
 	.y, "cub3d");
+	data->ray.pos_x = data->player.init_pos.x + 0.5;
+	data->ray.pos_y = data->player.init_pos.y + 0.5;
+	get_dir_vector(data);
 	load_textures(data);
 	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, \
 		&handle_keypress, data);

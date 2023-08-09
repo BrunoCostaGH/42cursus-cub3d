@@ -6,11 +6,11 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 19:31:27 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/08 19:31:27 by tabreia-         ###   ########.fr       */
+/*   Updated: 2023/08/09 15:22:48 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 int	run_compares(char *str, t_data *data)
 {
@@ -56,7 +56,7 @@ char	**get_map(int beg_map, char **txt)
 		i++;
 	map = ft_calloc(i - beg_map + 1, sizeof(char *));
 	i = 0;
-	while (txt[beg_map])
+	while (beg_map >= 0 && txt[beg_map] && txt[beg_map][0])
 		map[i++] = ft_strdup(txt[beg_map++]);
 	return (map);
 }
