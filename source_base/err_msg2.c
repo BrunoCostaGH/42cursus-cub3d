@@ -10,11 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 void	write_empty_file(char *file_path)
 {
 	write(2, "Error: ", 7);
 	write(2, file_path, ft_strlen(file_path));
-	write(2, " file is empty\n", 15);
+	write(2, ": Empty file\n", 13);
 }

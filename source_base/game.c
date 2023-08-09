@@ -26,8 +26,8 @@ void	get_dir_vector(t_data *data)
 
 int	handle_movement(t_data *data)
 {
-	double			move_speed;
-	double			rot_speed;
+	double	move_speed;
+	double	rot_speed;
 
 	move_speed = 0.1;
 	rot_speed = 0.1;

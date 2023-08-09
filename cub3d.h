@@ -111,8 +111,6 @@ typedef struct s_data
 	t_moves			moves;
 }	t_data;
 
-char			**get_map(int beg_map, char **txt);
-
 bool			is_valid_char(char c, bool for_player);
 bool			valid_cub_file(char *file_path, t_data *data);
 bool			check_if_file_exists(char *file_path, int is_cub_file);
@@ -131,9 +129,8 @@ int				run_compares(char *str, t_data *data);
 int				save_rgb_to_struct(char *str, int id, t_data *data);
 int				save_path_to_struct(char *str, int id, t_data *data);
 int				get_init_player_pos(t_data *data, char **map, int y);
-int				set_init_values(t_data *data);
 int				check_rgb_range(char **rgb);
-int				validate_rgb(char **info, char **rgb)
+int				validate_rgb(t_data *data, int id, char **info, char **rgb);
 
 unsigned int	gix(t_img *img, int x, int y);
 
@@ -150,17 +147,14 @@ void			free_int_arr(int **info);
 void			init_moves(t_data *data);
 void			free_file_cont(t_data *data);
 void			free_char_arr(char **info);
-void			free_int_arr(int **info);
 void			init_images(t_data *data);
-void			free_char_arr(char **info);
 void			draw_ceiling(t_data *data);
 void			load_textures(t_data *data);
 void			texture_picker(t_data *data);
-void			initial_draws(t_data *data);
 void			init_file_cont(t_data *data);
 void			get_dir_vector(t_data *data);
 void			init_image(t_data *data, t_img *image);
-void			pix(t_img *img, int x, int y, int color);void	write_miss_file(char **info);
+void			pix(t_img *img, int x, int y, int color);
 void			write_empty_file(char *file_path);
 void			write_invalid_format_path(char **info);
 void			write_out_of_range(char **info, char **rgb);

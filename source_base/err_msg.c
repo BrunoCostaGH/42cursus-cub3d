@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 void	write_invalid_format_rgb(char **info)
 {
@@ -31,14 +31,6 @@ void	write_out_of_range(char **info, char **rgb)
 	free_char_arr(info);
 	free_char_arr(rgb);
 	write(2, "Error: RGB values out of range\n", 31);
-}
-
-void	write_miss_file(char **info)
-{
-	write(2, "File: ", 6);
-	write(2, info[1], ft_strlen(info[1]));
-	write(2, "\n", 1);
-	free_char_arr(info);
 }
 
 void	write_invalid_format_path(char **info)

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 int	check_rgb_range(char **rgb)
 {
@@ -46,7 +46,7 @@ void	copy_file_path(t_data *data, char **info, int len, int id)
 	free_char_arr(info);
 }
 
-int	validate_rgb(char **info, char **rgb)
+int	validate_rgb(t_data *data, int id, char **info, char **rgb)
 {
 	if (info[2])
 	{
@@ -64,5 +64,6 @@ int	validate_rgb(char **info, char **rgb)
 		write_out_of_range(info, rgb);
 		return (0);
 	}
+	save_values(data, id, rgb, info);
 	return (1);
 }

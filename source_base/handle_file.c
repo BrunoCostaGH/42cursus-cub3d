@@ -63,9 +63,9 @@ int	save_rgb_to_struct(char *str, int id, t_data *data)
 	free(info[1]);
 	info[0] = temp[0];
 	info[1] = temp[1];
-	if (!validate_rgb(info, rgb))
+	rgb = 0;
+	if (!validate_rgb(data, id, info, rgb))
 		return (0);
-	save_values(data, id, rgb, info);
 	return (1);
 }
 
