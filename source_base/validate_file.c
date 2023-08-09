@@ -72,7 +72,8 @@ bool	valid_player(t_data *data, char **map)
 		&map[data->player.init_pos.y][data->player.init_pos.x], \
 		data->player.init_pos.y))
 		return (true);
-	write(2, "Error: Missing or invalid player spawn point\n", 45);
+	if (map && map[0])
+		write(2, "Error: Missing or invalid player spawn point\n", 45);
 	return (false);
 }
 
