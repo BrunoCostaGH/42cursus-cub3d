@@ -14,10 +14,20 @@
 
 int	check_rgb_range(char **rgb)
 {
+	int	index[2];
 	int	red;
 	int	green;
 	int	blue;
 
+	index[0] = 0;
+	while (index[0] <= 2 && rgb[index[0]])
+	{
+		index[1] = 0;
+		while (rgb[index[0]][index[1]])
+			if (!ft_isdigit(rgb[index[0]][index[1]++]))
+				return (0);
+		index[0]++;
+	}
 	red = ft_atoi(rgb[0]);
 	green = ft_atoi(rgb[1]);
 	blue = ft_atoi(rgb[2]);
