@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 19:31:27 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/09 15:22:48 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/09 20:34:18 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,12 @@ int	find_identifiers(char **str, t_data *data)
 	beg_map = -1;
 	while (str[i])
 	{
-		if (!run_compares(str[i], data) && !is_empty_line(str[i]) && \
-		beg_map == -1 && is_valid_struct(data))
-			beg_map = i;
+		if (!is_empty_line(str[i]) && !run_compares(str[i], data))
+			if (ft_strncmp(str[i], "NO", 2) && ft_strncmp(str[i], "SO", 2) && \
+			ft_strncmp(str[i], "WE", 2) && ft_strncmp(str[i], "EA", 2) && \
+			ft_strncmp(str[i], "F", 1) && ft_strncmp(str[i], "C", 1))
+				if (is_valid_struct(data) && beg_map == -1)
+					beg_map = i;
 		i++;
 	}
 	return (beg_map);
@@ -76,7 +79,8 @@ bool	is_valid_struct(t_data *data)
 {
 	if (data->file_cont->textures_path[0] && \
 			data->file_cont->textures_path[1] && \
-				data->file_cont->textures_path[2])
+				data->file_cont->textures_path[2] && \
+					data->file_cont->textures_path[3])
 		if (data->file_cont->colors[0] && data->file_cont->colors[1])
 			return (true);
 	return (false);
