@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -37,7 +35,7 @@ typedef struct s_point
 	int				y;
 }	t_point;
 
-typedef struct	s_moves
+typedef struct s_moves
 {
 	bool	forward;
 	bool	back;
@@ -45,20 +43,7 @@ typedef struct	s_moves
 	bool	left;
 	bool	r_right;
 	bool	r_left;
-	bool	r_right_mouse;
-	bool	r_left_mouse;
-	bool	l_up;
-	bool	l_down;
-	bool	ctrl;
 }	t_moves;
-
-typedef struct s_map
-{
-	int				player;
-	char			**map_arr;
-	char			**map_val;
-	t_point			map_size;
-}	t_map;
 
 typedef struct s_img
 {
@@ -84,7 +69,7 @@ typedef struct s_player
 	char			init_dir;
 }	t_player;
 
-typedef struct	s_ray
+typedef struct s_ray
 {
 	double			pos_x;
 	double			pos_y;
@@ -92,95 +77,98 @@ typedef struct	s_ray
 	double			dir_y;
 	double			plane_x;
 	double			plane_y;
-	double			cameraX;
-	double 			ray_dir_x;
-	double 			ray_dir_y;
-	double			side_dist_X;
-	double			side_dist_Y;
-	double			delta_dist_X;
+	double			camera_x;
+	double			ray_dir_x;
+	double			ray_dir_y;
+	double			side_dist_x;
+	double			side_dist_y;
+	double			delta_dist_x;
 	double			delta_dist_y;
 	double			perp_wall_dist;
-	int 			mapX;
-	int 			mapY;
-	int				stepX;
-	int				stepY;
+	int				map_x;
+	int				map_y;
+	int				step_x;
+	int				step_y;
 	int				side;
-	int 			hit;
+	int				hit;
 	int				line_height;
-	int 			draw_start;
-	int 			draw_end;
+	int				draw_start;
+	int				draw_end;
 	int				color;
-	char 			*tex_to_apply;
-	char			**tex_matrix;
 }	t_ray;
-
-typedef struct s_pixelData
-{
-	char			symbol;
-	int				hex_color;
-}	t_pixelData;
-
-typedef struct s_texData
-{
-	char 			**tex_array;
-	char 			*tex_symbols;
-	int				*tex_colors;
-	int				columns;
-	int				rows;
-	int				n_of_colors;
-	t_pixelData		*pixelData;
-}	t_texData;
 
 typedef struct s_data
 {
 	void			*mlx_ptr;
 	void			*win_ptr;
-	int				map_sur;
 	int				id;
-	int 			diff_x;
-	int 			diff_y;
-	int				draw_mid_point;
-	t_point			oldMouse;
-	t_point			mouse;
-	t_point			flood_point;
-	t_point			max;
-	t_point 		max_fov;
-	t_point 		min_fov;
-	double 		max_fov_dec;
-	double 		min_fov_dec;
-	t_point			min_fov_hp;
-	t_point			max_fov_hp;
-	t_vector 		window;
+	t_vector		window;
 	t_player		player;
 	t_file			*file_cont;
 	t_img			*img;
 	t_img			**tex_img;
-	t_img			*mini;
-	t_img			*prev_mini;
-	t_map			map;
 	t_ray			ray;
 	t_moves			moves;
-	t_texData		*texData;
 }	t_data;
 
-bool	check_if_file_exists(char *file_path, int is_cub_file);
-bool	valid_cub_file(char *file_path, t_data *data);
-bool	is_valid_char(char c, bool for_player);
+bool			is_valid_char(char c, bool for_player);
+bool			valid_cub_file(char *file_path, t_data *data);
+bool			check_if_file_exists(char *file_path, int is_cub_file);
+bool			is_valid_struct(t_data *data);
+bool			is_empty_line(char *str);
 
-int		get_init_player_pos(t_data *data, char **map, int y);
-int		encode_rgb(int red, int green, int blue);
-int		read_file(char *file_path, t_data *data);
-int		get_n_colors(t_data *data, int id);
+int				raycast(t_data *v_data);
+int				free_game(t_data *data);
+int				handle_movement(t_data *data);
+int				handle_keypress(int key, t_data *data);
+int				encode_rgb(int red, int green, int blue);
+int				read_file(char *file_path, t_data *data);
+int				handle_key_release(int key, t_data *data);
+int				find_identifiers(char **str, t_data *data);
+int				run_compares(char *str, t_data *data);
+int				save_rgb_to_struct(char *str, int id, t_data *data);
+int				save_path_to_struct(char *str, int id, t_data *data);
+int				get_init_player_pos(t_data *data, char **map, int y);
+int				check_rgb_range(char **rgb);
+int				validate_rgb(t_data *data, int id, char **info, char **rgb);
 
-char	**check_for_data(char **str, t_data *data);
-char	**get_map(int beg_map, char **txt);
+unsigned int	gix(t_img *img, int x, int y);
 
-void	init_minimap(t_data *data);
-void	start_game(t_data *data);
-void	parse_textures(t_data *data);
-void	free_char_arr(char **info);
-void	free_int_arr(int **info);
-void	pix(t_img *img, int x, int y, int color);
-void	draw_vert_line(t_img *img, int x, int draw_start, int draw_end, int color);
+char			**get_map(int beg_map, char **txt);
+char			**check_for_data(char **str, t_data *data);
 
+void			set_n(t_data *data);
+void			set_s(t_data *data);
+void			set_e(t_data *data);
+void			set_w(t_data *data);
+void			draw_floor(t_data *data);
+void			start_game(t_data *data);
+void			free_int_arr(int **info);
+void			init_moves(t_data *data);
+void			free_file_cont(t_data *data);
+void			free_char_arr(char **info);
+void			init_images(t_data *data);
+void			draw_ceiling(t_data *data);
+void			load_textures(t_data *data);
+void			texture_picker(t_data *data);
+void			init_file_cont(t_data *data);
+void			get_dir_vector(t_data *data);
+void			init_image(t_data *data, t_img *image);
+void			pix(t_img *img, int x, int y, int color);
+void			write_empty_file(char *file_path);
+void			write_invalid_format_path(char **info);
+void			write_out_of_range(char **info, char **rgb);
+void			write_miss_rgb(char **info, char **rgb);
+void			write_invalid_format_rgb(char **info);
+void			copy_file_path(t_data *data, char **info, int len, int id);
+void			save_values(t_data *data, int id, char **rgb, char **info);
+void			apply_texture(t_data *data, int x, int id);
+void			move_forward(t_data *info, double move_speed);
+void			move_backwards(t_data *info, double move_speed);
+void			move_left(t_data *info, double move_speed);
+void			move_right(t_data *info, double move_speed);
+void			rotate_left(t_data *info, double rot_speed);
+void			rotate_right(t_data *info, double rot_speed);
+void			draw_vert_line(t_data *data, int x, int draw_start, \
+				int draw_end);
 #endif

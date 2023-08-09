@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 bool	is_valid_char(char c, bool for_player)
 {
@@ -35,7 +35,7 @@ bool	is_valid_char(char c, bool for_player)
 int	get_init_player_pos(t_data *data, char **map, int y)
 {
 	int	x;
-	int n_player_spawn;
+	int	n_player_spawn;
 
 	n_player_spawn = 0;
 	while (map[y])

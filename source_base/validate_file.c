@@ -6,11 +6,11 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:23:44 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/07/06 15:07:56 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/09 15:23:54 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../cub3d.h"
 
 bool	check_valid_surrounding(char **map, char *point, int y)
 {
@@ -40,7 +40,8 @@ bool	valid_map(char **map)
 	char	*current_floor;
 
 	y = 0;
-	current_floor = ft_strchr(map[y], '0');
+	if (map[y])
+		current_floor = ft_strchr(map[y], '0');
 	while (map[y])
 	{
 		if (current_floor)
@@ -71,7 +72,8 @@ bool	valid_player(t_data *data, char **map)
 		&map[data->player.init_pos.y][data->player.init_pos.x], \
 		data->player.init_pos.y))
 		return (true);
-	write(2, "Error: Missing or invalid player spawn point\n", 45);
+	if (map && map[0])
+		write(2, "Error: Missing or invalid player spawn point\n", 45);
 	return (false);
 }
 
@@ -96,7 +98,9 @@ bool	check_if_file_exists(char *file_path, int is_cub_file)
 	fd = open(file_path, O_RDONLY);
 	if (fd == -1)
 	{
-		perror("Error");
+		write(2, "Error: ", 7);
+		write(2, file_path, ft_strlen(file_path));
+		perror(" \b");
 		return (false);
 	}
 	close(fd);
@@ -107,7 +111,7 @@ bool	check_if_file_exists(char *file_path, int is_cub_file)
 		{
 			write(2, "Error: ", 7);
 			write(2, file_ext, ft_strlen(file_ext));
-			write(2, " is not a valid extension\n", 26);
+			write(2, ": Is not a valid extension\n", 26);
 			return (false);
 		}
 	}
