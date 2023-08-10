@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:48:53 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/10 18:51:52 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/10 16:14:06 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	draw_ceiling(t_data *data)
 	while (x <= data->window.x)
 	{
 		draw_vert_line(data->img, (t_point){x, 0}, \
-		(t_point){x, data->draw_mid_point}, data->ray.color);
+		(t_point){x, data->window.y / 2}, data->ray.color);
 		x++;
 	}
 }
@@ -46,7 +46,7 @@ void	draw_floor(t_data *data)
 	data->ray.color = encode_rgb(red, green, blue);
 	while (x <= data->window.x)
 	{
-		draw_vert_line(data->img, (t_point){x, data->draw_mid_point}, \
+		draw_vert_line(data->img, (t_point){x, data->window.y / 2}, \
 		(t_point){x, data->window.y}, data->ray.color);
 		x++;
 	}
