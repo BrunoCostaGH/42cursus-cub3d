@@ -102,6 +102,7 @@ typedef struct s_data
 	void			*mlx_ptr;
 	void			*win_ptr;
 	int				id;
+	double			draw_mid_point;
 	t_vector		window;
 	t_player		player;
 	t_file			*file_cont;
