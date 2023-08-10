@@ -19,7 +19,7 @@ static void	apply_texture_2(t_data *data, int x, int id, t_point *tex)
 	int				y;
 
 	step = 1.0 * 64 / data->ray.line_height;
-	tex_pos = (data->ray.draw_start - data->window.y / 2 + \
+	tex_pos = (data->ray.draw_start - data->draw_mid_point + \
 		data->ray.line_height / 2) * step;
 	y = data->ray.draw_start;
 	while (y < data->ray.draw_end && y < data->window.y)

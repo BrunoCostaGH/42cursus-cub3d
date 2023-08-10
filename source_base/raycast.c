@@ -66,10 +66,10 @@ static void	calculate_drawpoints(t_data *data)
 				data->ray.delta_dist_y;
 	data->ray.line_height = (int)(data->window.y / \
 			data->ray.perp_wall_dist);
-	data->ray.draw_start = -data->ray.line_height / 2 + data->window.y / 2;
+	data->ray.draw_start = -data->ray.line_height / 2 + data->draw_mid_point;
 	if (data->ray.draw_start < 0)
 		data->ray.draw_start = 0;
-	data->ray.draw_end = data->ray.line_height / 2 + data->window.y / 2;
+	data->ray.draw_end = data->ray.line_height / 2 + data->draw_mid_point;
 	if (data->ray.draw_end >= data->window.y)
 		data->ray.draw_end = data->window.x - 1;
 }
