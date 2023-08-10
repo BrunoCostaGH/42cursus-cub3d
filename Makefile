@@ -6,7 +6,7 @@
 #    By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/14 22:20:44 by tabreia-          #+#    #+#              #
-#    Updated: 2023/08/09 18:16:16 by bsilva-c         ###   ########.fr        #
+#    Updated: 2023/08/10 16:48:51 by bsilva-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,8 @@ $(BASE_DIR)/handle_file.c $(BASE_DIR)/handle_file_utils.c \
 $(BASE_DIR)/handle_file_utils2.c $(BASE_DIR)/handle_input.c \
 $(BASE_DIR)/inits.c $(BASE_DIR)/move.c $(BASE_DIR)/raycast.c \
 $(BASE_DIR)/rotate.c $(BASE_DIR)/set_dir_vector.c $(BASE_DIR)/textures.c \
-$(BASE_DIR)/validate_file.c $(BASE_DIR)/validate_file_utils.c main.c
+$(BASE_DIR)/validate_file.c $(BASE_DIR)/validate_file_utils.c main.c \
+minimap.c minimap_utils.c
 OBJ_BASE = $(SRC_BASE:.c=.o)
 
 LIBFT = libft/libft.a

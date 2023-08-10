@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:14:41 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/10 15:52:56 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/10 16:47:51 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,12 @@ typedef struct s_data
 	t_img			**tex_img;
 	t_ray			ray;
 	t_moves			moves;
+	double			max_fov_dec;
+	double			min_fov_dec;
+	t_point			min_fov_hp;
+	t_point			max_fov_hp;
+	t_img			*mini;
+	t_img			*prev_mini;
 }	t_data;
 
 bool			is_valid_char(char c, bool for_player);
@@ -171,4 +177,7 @@ void			rotate_left(t_data *info, double rot_speed);
 void			rotate_right(t_data *info, double rot_speed);
 void			draw_vert_line(t_img *img, t_point draw_start, \
 				t_point draw_end, int color);
+
+void			init_minimap(t_data *data);
+void			get_fov_line(t_data *data, int x);
 #endif

@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:27:42 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/08 17:43:44 by tabreia-         ###   ########.fr       */
+/*   Updated: 2023/08/10 17:54:23 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@ t_data	*generate_data(void)
 	init_moves(data);
 	init_images(data);
 	init_file_cont(data);
+	data->mini = malloc(sizeof(t_img));
+	data->mini->mlx_img = 0;
+	data->prev_mini = malloc(sizeof(t_img));
+	data->prev_mini->mlx_img = 0;
+	data->min_fov_dec = 0;
+	data->max_fov_dec = 0;
+	data->min_fov_hp.x = 0;
+	data->min_fov_hp.y = 0;
+	data->max_fov_hp.x = 0;
+	data->max_fov_hp.y = 0;
 	data->window.x = 1280;
 	data->window.y = 1024;
 	return (data);

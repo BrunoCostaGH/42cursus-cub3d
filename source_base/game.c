@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:56:23 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/09 15:40:13 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/10 18:11:05 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int	handle_movement(t_data *data)
 
 	move_speed = 0.1;
 	rot_speed = 0.1;
+	init_minimap(data);
 	if (data->moves.forward == true)
 		move_forward(data, move_speed);
 	if (data->moves.back == true)

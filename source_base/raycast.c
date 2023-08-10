@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:14:56 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/09 15:39:23 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/10 18:09:55 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ int	raycast(t_data *data)
 		calc_step(data);
 		dda_algo(data);
 		calculate_drawpoints(data);
+		get_fov_line(data, x);
 		texture_picker(data);
 		apply_texture(data, x, data->id);
 	}
