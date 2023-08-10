@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:14:41 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/07/06 15:07:29 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/10 15:52:56 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,6 @@ void			move_left(t_data *info, double move_speed);
 void			move_right(t_data *info, double move_speed);
 void			rotate_left(t_data *info, double rot_speed);
 void			rotate_right(t_data *info, double rot_speed);
-void			draw_vert_line(t_data *data, int x, int draw_start, \
-				int draw_end);
+void			draw_vert_line(t_img *img, t_point draw_start, \
+				t_point draw_end, int color);
 #endif

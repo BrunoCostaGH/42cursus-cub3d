@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:47:43 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/08 18:47:43 by tabreia-         ###   ########.fr       */
+/*   Updated: 2023/08/10 16:16:21 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,12 @@ void	pix(t_img *img, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-void	draw_vert_line(t_data *data, int x, int draw_start, int draw_end)
+void	draw_vert_line(t_img *img, t_point draw_start, t_point draw_end, \
+						int color)
 {
-	int	i;
-
-	i = draw_start;
-	while (i <= draw_end && x >= 0 && i >= 0)
+	while (draw_start.x >= 0 && draw_start.y >= 0 && draw_start.y <= draw_end.y)
 	{
-		pix(data->img, x, i, data->ray.color);
-		i++;
+		pix(img, draw_start.x, draw_start.y, color);
+		draw_start.y++;
 	}
 }
