@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:14:56 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/09 15:39:23 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/10 19:32:52 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ int	raycast(t_data *data)
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, \
 		data->img->mlx_img, 0, 0);
+	handle_mouse(data);
 	handle_movement(data);
 	return (0);
 }
