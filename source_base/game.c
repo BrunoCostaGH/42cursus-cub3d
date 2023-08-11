@@ -33,6 +33,7 @@ int	handle_movement(t_data *data)
 	move_speed = 0.1;
 	rot_speed_x = 10 * (data->diff_x / data->window.x);
 	rot_speed_y = 10 * (data->diff_y);
+	init_minimap(data);
 	if (data->moves.forward == true)
 		move_forward(data, move_speed);
 	if (data->moves.back == true)
