@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:14:56 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/10 18:09:55 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/10 19:32:52 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ static void	calculate_drawpoints(t_data *data)
 				data->ray.delta_dist_y;
 	data->ray.line_height = (int)(data->window.y / \
 			data->ray.perp_wall_dist);
-	data->ray.draw_start = -data->ray.line_height / 2 + data->window.y / 2;
+	data->ray.draw_start = -data->ray.line_height / 2 + data->draw_mid_point;
 	if (data->ray.draw_start < 0)
 		data->ray.draw_start = 0;
-	data->ray.draw_end = data->ray.line_height / 2 + data->window.y / 2;
+	data->ray.draw_end = data->ray.line_height / 2 + data->draw_mid_point;
 	if (data->ray.draw_end >= data->window.y)
 		data->ray.draw_end = data->window.x - 1;
 }
@@ -120,6 +120,7 @@ int	raycast(t_data *data)
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, \
 		data->img->mlx_img, 0, 0);
+	handle_mouse(data);
 	handle_movement(data);
 	return (0);
 }

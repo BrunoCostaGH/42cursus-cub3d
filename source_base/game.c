@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:56:23 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/10 18:11:05 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/10 19:32:58 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,12 @@ void	get_dir_vector(t_data *data)
 int	handle_movement(t_data *data)
 {
 	double	move_speed;
-	double	rot_speed;
+	double	rot_speed_x;
+	double	rot_speed_y;
 
 	move_speed = 0.1;
-	rot_speed = 0.1;
+	rot_speed_x = 10 * (data->diff_x / data->window.x);
+	rot_speed_y = 10 * (data->diff_y);
 	init_minimap(data);
 	if (data->moves.forward == true)
 		move_forward(data, move_speed);
@@ -40,10 +42,14 @@ int	handle_movement(t_data *data)
 		move_left(data, move_speed);
 	if (data->moves.right == true)
 		move_right(data, move_speed);
-	if (data->moves.r_left == true)
-		rotate_left(data, rot_speed);
-	if (data->moves.r_right == true)
-		rotate_right(data, rot_speed);
+	if (data->moves.r_left == true || data->moves.r_left_mouse == true)
+		rotate_left(data, rot_speed_x);
+	if (data->moves.r_right == true || data->moves.r_right_mouse == true)
+		rotate_right(data, rot_speed_x);
+	if (data->moves.r_up == true)
+		rotate_up(data, rot_speed_y);
+	if (data->moves.r_down == true)
+		rotate_down(data, rot_speed_y);
 	return (0);
 }
 
@@ -62,5 +68,10 @@ void	start_game(t_data *data)
 		&handle_key_release, data);
 	mlx_hook(data->win_ptr, 17, 1L << 17, free_game, data);
 	mlx_loop_hook(data->mlx_ptr, &raycast, data);
+	mlx_mouse_hide(data->mlx_ptr, data->win_ptr);
+	mlx_mouse_move(data->mlx_ptr, data->win_ptr, data->window.x / 2, \
+		data->window.y / 2);
+	mlx_mouse_get_pos(data->mlx_ptr, data->win_ptr, &data->old_mouse.x, \
+		&data->old_mouse.y);
 	mlx_loop(data->mlx_ptr);
 }
