@@ -104,9 +104,8 @@ int	raycast(t_data *data)
 		mlx_destroy_image(data->mlx_ptr, data->img->mlx_img);
 		data->img->mlx_img = 0;
 	}
+	handle_mouse(data);
 	init_image(data, data->img);
-	draw_floor(data);
-	draw_ceiling(data);
 	x = 0;
 	while (x++ < data->window.x)
 	{
