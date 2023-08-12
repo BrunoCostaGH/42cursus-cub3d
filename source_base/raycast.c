@@ -113,6 +113,7 @@ int	raycast(t_data *data)
 		calc_step(data);
 		dda_algo(data);
 		calculate_drawpoints(data);
+		get_fov_line(data, x);
 		texture_picker(data);
 		apply_texture(data, x, data->id);
 	}

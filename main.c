@@ -24,6 +24,16 @@ t_data	*generate_data(void)
 	init_moves(data);
 	init_images(data);
 	init_file_cont(data);
+	data->mini = malloc(sizeof(t_img));
+	data->mini->mlx_img = 0;
+	data->prev_mini = malloc(sizeof(t_img));
+	data->prev_mini->mlx_img = 0;
+	data->min_fov_dec = 0;
+	data->max_fov_dec = 0;
+	data->min_fov_hp.x = 0;
+	data->min_fov_hp.y = 0;
+	data->max_fov_hp.x = 0;
+	data->max_fov_hp.y = 0;
 	data->window.x = 1280;
 	data->window.y = 1024;
 	data->draw_mid_point = data->window.y / 2;
