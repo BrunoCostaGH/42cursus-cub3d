@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:56:23 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/10 19:32:58 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/12 16:35:07 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ int	handle_movement(t_data *data)
 	double	rot_speed_y;
 
 	move_speed = 0.1;
-	rot_speed_x = 10 * (data->diff_x / data->window.x);
-	rot_speed_y = 10 * (data->diff_y);
+	rot_speed_x = move_speed + (move_speed * (data->diff_x / 40));
+	rot_speed_y = move_speed + (move_speed * data->diff_y * 40);
 	if (data->moves.forward == true)
 		move_forward(data, move_speed);
 	if (data->moves.back == true)
