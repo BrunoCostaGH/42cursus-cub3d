@@ -35,7 +35,6 @@
 *.i*86
 *.x86_64
 *.hex
-cub3d
 
 # Debug files
 *.dSYM/
@@ -47,7 +46,6 @@ cub3d
 *.mod*
 *.cmd
 .tmp_versions/
-.minilibx-linux/
 modules.order
 Module.symvers
 Mkfile.old
