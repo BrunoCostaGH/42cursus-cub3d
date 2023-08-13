@@ -43,6 +43,11 @@ typedef struct s_moves
 	bool	left;
 	bool	r_right;
 	bool	r_left;
+	bool	r_right_mouse;
+	bool	r_left_mouse;
+	bool	r_up;
+	bool	r_down;
+	bool	ctrl;
 }	t_moves;
 
 typedef struct s_img
@@ -110,6 +115,16 @@ typedef struct s_data
 	t_img			**tex_img;
 	t_ray			ray;
 	t_moves			moves;
+	double			max_fov_dec;
+	double			min_fov_dec;
+	t_point			min_fov_hp;
+	t_point			max_fov_hp;
+	t_img			*mini;
+	t_img			*prev_mini;
+	t_point			old_mouse;
+	t_point			mouse;
+	int				diff_x;
+	int				diff_y;
 }	t_data;
 
 bool			is_valid_char(char c, bool for_player);
@@ -173,4 +188,12 @@ void			rotate_left(t_data *info, double rot_speed);
 void			rotate_right(t_data *info, double rot_speed);
 void			draw_vert_line(t_img *img, t_point draw_start, \
 				t_point draw_end, int color);
+
+void			init_minimap(t_data *data);
+void			get_fov_line(t_data *data, int x);
+
+int				handle_mouse(t_data *data);
+void			rotate_up(t_data *data, double rot_speed);
+void			rotate_down(t_data *data, double rot_speed);
+
 #endif

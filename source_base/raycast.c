@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 18:14:56 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/09 15:39:23 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/10 19:32:52 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,8 @@ int	raycast(t_data *data)
 		mlx_destroy_image(data->mlx_ptr, data->img->mlx_img);
 		data->img->mlx_img = 0;
 	}
+	handle_mouse(data);
 	init_image(data, data->img);
-	draw_floor(data);
-	draw_ceiling(data);
 	x = 0;
 	while (x++ < data->window.x)
 	{
@@ -114,11 +113,13 @@ int	raycast(t_data *data)
 		calc_step(data);
 		dda_algo(data);
 		calculate_drawpoints(data);
+		get_fov_line(data, x);
 		texture_picker(data);
 		apply_texture(data, x, data->id);
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, \
 		data->img->mlx_img, 0, 0);
+	handle_mouse(data);
 	handle_movement(data);
 	return (0);
 }

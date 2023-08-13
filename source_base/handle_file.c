@@ -90,10 +90,15 @@ char	**check_for_data(char **str, t_data *data)
 	{
 		index[1] = 0;
 		while (data->file_cont->map_arr[index[0] - 1][++index[1] - 1])
-			if (is_valid_char(data->file_cont->map_arr[index[0] - 1] \
-					[index[1] - 1], true))
+		{
+			if (is_valid_char(data->file_cont->map_arr[index[0] - 1][index[1] - \
+				1], true))
 				data->file_cont->map_arr[index[0] - 1][index[1] - 1] = '0';
+			if (index[1] - 1 > data->file_cont->map_size.x)
+				data->file_cont->map_size.x = index[1] - 1;
+		}
 	}
+	data->file_cont->map_size.y = index[0] - 2;
 	return (get_map(beg_map, str));
 }
 

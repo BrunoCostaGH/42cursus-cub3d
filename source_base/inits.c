@@ -19,17 +19,23 @@ void	init_image(t_data *data, t_img *image)
 	image->addr = mlx_get_data_addr(image->mlx_img, \
 		&image->bits_per_pixel, &image->line_length, \
 			&image->endian);
+	draw_floor(data);
+	draw_ceiling(data);
 }
 
 void	init_moves(t_data *data)
 {
-	data->player.init_dir = 0;
 	data->moves.right = false;
 	data->moves.left = false;
 	data->moves.forward = false;
 	data->moves.back = false;
 	data->moves.r_right = false;
 	data->moves.r_left = false;
+	data->moves.r_right_mouse = false;
+	data->moves.r_left_mouse = false;
+	data->moves.r_up = false;
+	data->moves.r_down = false;
+	data->moves.ctrl = false;
 }
 
 void	init_images(t_data *data)

@@ -40,6 +40,16 @@ void	free_char_arr(char **info)
 	info = 0;
 }
 
+void	free_extra(t_data *data)
+{
+	if (data->mini->mlx_img)
+		mlx_destroy_image(data->mlx_ptr, data->mini->mlx_img);
+	free(data->mini);
+	if (data->prev_mini->mlx_img)
+		mlx_destroy_image(data->mlx_ptr, data->prev_mini->mlx_img);
+	free(data->prev_mini);
+}
+
 void	free_file_cont(t_data *data)
 {
 	if (data->file_cont)
@@ -55,6 +65,7 @@ void	free_file_cont(t_data *data)
 		free(data->file_cont);
 	}
 	free(data->img);
+	free_extra(data);
 }
 
 int	free_game(t_data *data)
@@ -72,6 +83,7 @@ int	free_game(t_data *data)
 		}
 		free(data->tex_img);
 	}
+	free_file_cont(data);
 	if (data->mlx_ptr)
 	{
 		if (data->img->mlx_img)
