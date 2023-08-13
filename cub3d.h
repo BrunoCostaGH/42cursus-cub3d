@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:14:41 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/10 15:52:56 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/13 14:51:20 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ typedef struct s_data
 
 bool			is_valid_char(char c, bool for_player);
 bool			valid_cub_file(char *file_path, t_data *data);
-bool			check_if_file_exists(char *file_path, int is_cub_file);
+bool			check_if_file_exists(char *file_path, const char *extension);
 bool			is_valid_struct(t_data *data);
 bool			is_empty_line(char *str);
 
@@ -132,6 +132,8 @@ int				save_path_to_struct(char *str, int id, t_data *data);
 int				get_init_player_pos(t_data *data, char **map, int y);
 int				check_rgb_range(char **rgb);
 int				validate_rgb(t_data *data, int id, char **info, char **rgb);
+int				copy_file_path(t_data *data, char **info, int len, int id);
+int				save_values(t_data *data, int id, char **rgb, char **info);
 
 unsigned int	gix(t_img *img, int x, int y);
 
@@ -161,8 +163,7 @@ void			write_invalid_format_path(char **info);
 void			write_out_of_range(char **info, char **rgb);
 void			write_miss_rgb(char **info, char **rgb);
 void			write_invalid_format_rgb(char **info);
-void			copy_file_path(t_data *data, char **info, int len, int id);
-void			save_values(t_data *data, int id, char **rgb, char **info);
+void			write_invalid_extension(char *file_ext);
 void			apply_texture(t_data *data, int x, int id);
 void			move_forward(t_data *info, double move_speed);
 void			move_backwards(t_data *info, double move_speed);

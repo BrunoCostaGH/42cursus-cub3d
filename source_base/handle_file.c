@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:49:25 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/09 15:59:34 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/13 15:16:21 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,12 @@ int	save_path_to_struct(char *str, int id, t_data *data)
 		write_invalid_format_path(info);
 		return (0);
 	}
-	if (!check_if_file_exists(info[1], 0))
+	if (!check_if_file_exists(info[1], ".xpm"))
 	{
 		free_char_arr(info);
 		return (0);
 	}
-	copy_file_path(data, info, len, id);
-	return (1);
+	return (copy_file_path(data, info, len, id));
 }
 
 /*
@@ -73,9 +72,18 @@ char	**check_for_data(char **str, t_data *data)
 {
 	int		index[2];
 	int		beg_map;
-	char	**map_val;
 
 	beg_map = find_identifiers(str, data);
+	if (beg_map == -2)
+		return (0);
+	else if (beg_map == -1)
+	{
+		if (!is_valid_struct(data))
+			write(2, "Error: Missing identifier\n", 26);
+		else
+			write(2, "Error: Missing map\n", 19);
+		return (0);
+	}
 	data->file_cont->map_arr = get_map(beg_map, str);
 	index[0] = 0;
 	while (data->file_cont->map_arr[++index[0] - 1])
@@ -86,8 +94,7 @@ char	**check_for_data(char **str, t_data *data)
 					[index[1] - 1], true))
 				data->file_cont->map_arr[index[0] - 1][index[1] - 1] = '0';
 	}
-	map_val = get_map(beg_map, str);
-	return (map_val);
+	return (get_map(beg_map, str));
 }
 
 int	count_lines(char *file_path)

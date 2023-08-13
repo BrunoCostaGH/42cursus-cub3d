@@ -6,44 +6,62 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 19:31:27 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/09 20:34:18 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/13 15:06:46 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-int	run_compares(char *str, t_data *data)
+int	run_compares(char *a_str, t_data *data)
 {
-	if (!ft_strncmp(str, "NO", 2) && save_path_to_struct(str, 0, data))
-		return (1);
-	else if (!ft_strncmp(str, "SO", 2) && save_path_to_struct(str, 1, data))
-		return (1);
-	else if (!ft_strncmp(str, "WE", 2) && save_path_to_struct(str, 2, data))
-		return (1);
-	else if (!ft_strncmp(str, "EA", 2) && save_path_to_struct(str, 3, data))
-		return (1);
-	else if (!ft_strncmp(str, "F", 1) && save_rgb_to_struct(str, 0, data))
-		return (1);
-	else if (!ft_strncmp(str, "C", 1) && save_rgb_to_struct(str, 1, data))
-		return (1);
-	return (0);
+	char	**str_arr;
+	char	*str;
+	int		status;
+
+	str_arr = ft_split(a_str, ' ');
+	str = str_arr[0];
+	status = 0;
+	if (str)
+	{
+		if ((!ft_strncmp(str, "NO", 3) && save_path_to_struct(a_str, 0, data)) \
+		|| (!ft_strncmp(str, "SO", 3) && save_path_to_struct(a_str, 1, data)) \
+		|| (!ft_strncmp(str, "WE", 3) && save_path_to_struct(a_str, 2, data)) \
+		|| (!ft_strncmp(str, "EA", 3) && save_path_to_struct(a_str, 3, data)) \
+		|| (!ft_strncmp(str, "F", 2) && save_rgb_to_struct(a_str, 0, data)) || \
+		(!ft_strncmp(str, "C", 2) && save_rgb_to_struct(a_str, 1, data)))
+			status = 1;
+		else if (str[0] && ft_isalpha(str[0]))
+		{
+			write(2, "Error: Duplicate or invalid identifier\n", 39);
+			status = 2;
+		}
+	}
+	free_char_arr(str_arr);
+	return (status);
 }
 
 int	find_identifiers(char **str, t_data *data)
 {
 	int	i;
 	int	beg_map;
+	int	status;
 
 	i = 0;
 	beg_map = -1;
-	while (str[i])
+	status = 0;
+	while (str[i] && status != 2)
 	{
-		if (!is_empty_line(str[i]) && !run_compares(str[i], data))
-			if (ft_strncmp(str[i], "NO", 2) && ft_strncmp(str[i], "SO", 2) && \
-			ft_strncmp(str[i], "WE", 2) && ft_strncmp(str[i], "EA", 2) && \
-			ft_strncmp(str[i], "F", 1) && ft_strncmp(str[i], "C", 1))
+		if (!is_empty_line(str[i]))
+		{
+			status = run_compares(str[i], data);
+			if (!status)
+			{
 				if (is_valid_struct(data) && beg_map == -1)
 					beg_map = i;
+			}
+			else if (status == 2)
+				beg_map = -2;
+		}
 		i++;
 	}
 	return (beg_map);
