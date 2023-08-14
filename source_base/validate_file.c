@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:23:44 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/09 15:23:54 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/13 15:28:37 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,36 +84,47 @@ bool	valid_cub_file(char *file_path, t_data *data)
 	if (read_file(file_path, data) == 0)
 		return (false);
 	map = check_for_data(data->file_cont->txt, data);
-	if (valid_map(map) == false || valid_player(data, map) == false)
+	if (!map)
 		return (false);
+	if (valid_map(map) == false)
+	{
+		write(2, "Error: Invalid map\n", 19);
+		free_char_arr(map);
+		return (false);
+	}
+	if (valid_player(data, map) == false)
+	{
+		free_char_arr(map);
+		return (false);
+	}
 	free_char_arr(map);
 	return (true);
 }
 
-bool	check_if_file_exists(char *file_path, int is_cub_file)
+bool	check_if_file_exists(char *file_path, const char *extension)
 {
 	int		fd;
 	char	*file_ext;
 
-	fd = open(file_path, O_RDONLY);
-	if (fd == -1)
+	if (extension)
 	{
-		write(2, "Error: ", 7);
-		write(2, file_path, ft_strlen(file_path));
-		perror(" \b");
-		return (false);
-	}
-	close(fd);
-	if (is_cub_file)
-	{
-		file_ext = ft_strchr(file_path, '.');
-		if (!file_ext || ft_strncmp(file_ext, ".cub", ft_strlen(file_ext) + 1))
+		file_ext = ft_strrchr(file_path, '.');
+		if (!file_ext || ft_strncmp(file_ext, extension, \
+			ft_strlen(file_ext) + 1))
 		{
-			write(2, "Error: ", 7);
-			write(2, file_ext, ft_strlen(file_ext));
-			write(2, ": Is not a valid extension\n", 26);
+			write_invalid_extension(file_ext);
 			return (false);
 		}
 	}
+	fd = open(file_path, O_RDONLY);
+	if (fd == -1)
+	{
+		write(2, "Error: `", 8);
+		if (file_path)
+			write(2, file_path, ft_strlen(file_path));
+		perror("'");
+		return (false);
+	}
+	close(fd);
 	return (true);
 }

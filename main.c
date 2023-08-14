@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:27:42 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/10 18:59:51 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/13 14:36:07 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,14 @@ int	main(int ac, char **av)
 	t_data	*data;
 
 	if (ac != 2)
-		write(2, "Usage: ./cub3d <path_to_cub_file>\n", 34);
-	if (ac != 2 || !check_if_file_exists(av[1], 1))
+		write(2, "Usage: ./cub3D <path_to_cub_file>\n", 34);
+	if (ac != 2 || !check_if_file_exists(av[1], ".cub"))
 		return (1);
 	data = generate_data();
 	if (!valid_cub_file(av[1], data))
 	{
 		write(2, "Error: Invalid .cub file\n", 25);
+		free_game(data);
 		return (1);
 	}
 	start_game(data);

@@ -6,7 +6,7 @@
 /*   By: bsilva-c <bsilva-c@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 15:02:36 by bsilva-c          #+#    #+#             */
-/*   Updated: 2023/07/06 15:04:05 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/13 15:00:37 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ bool	is_valid_char(char c, bool for_player)
 	if (c && (c == '0' || c == '1' || c == 'N' || c == 'S' || c == 'W' || \
 	c == 'E'))
 		return (true);
-	if (c && ft_isalnum(c))
+	if (c && ft_isprint(c))
 	{
 		write(2, "Error: `", 8);
 		write(2, &c, 1);
