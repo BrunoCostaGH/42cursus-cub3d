@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 19:31:27 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/13 15:06:46 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/18 16:35:10 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ int	find_identifiers(char **str, t_data *data)
 		}
 		i++;
 	}
+	if (!is_valid_struct(data) && beg_map == -1)
+		write(2, "Error: Missing identifier\n", 26);
 	return (beg_map);
 }
 

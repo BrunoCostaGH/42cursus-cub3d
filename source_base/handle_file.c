@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 22:49:25 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/13 15:16:21 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/18 16:33:11 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,8 @@ char	**check_for_data(char **str, t_data *data)
 	if (beg_map == -2)
 		return (0);
 	else if (beg_map == -1)
-	{
-		if (!is_valid_struct(data))
-			write(2, "Error: Missing identifier\n", 26);
-		else
-			write(2, "Error: Missing map\n", 19);
-		return (0);
-	}
+		if (is_valid_struct(data))
+			return ((char **)(write(2, "Error: Missing map\n", 19) * 0));
 	data->file_cont->map_arr = get_map(beg_map, str);
 	index[0] = 0;
 	while (data->file_cont->map_arr[++index[0] - 1])

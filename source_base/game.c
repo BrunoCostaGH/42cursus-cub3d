@@ -6,7 +6,7 @@
 /*   By: tabreia- <tabreia-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:56:23 by tabreia-          #+#    #+#             */
-/*   Updated: 2023/08/12 17:13:30 by bsilva-c         ###   ########.fr       */
+/*   Updated: 2023/08/18 18:58:09 by bsilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ void	start_game(t_data *data)
 	.y, "cub3d");
 	data->ray.pos_x = data->player.init_pos.x + 0.5;
 	data->ray.pos_y = data->player.init_pos.y + 0.5;
+	data->diff_x = 0;
+	data->diff_y = 0;
 	get_dir_vector(data);
 	load_textures(data);
 	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, \
